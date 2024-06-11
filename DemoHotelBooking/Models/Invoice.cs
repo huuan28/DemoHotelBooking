@@ -21,18 +21,11 @@ namespace DemoHotelBooking.Models
 
         public DateTime PaymentDate { get; set; } //thời gian thanh toán
 
-        public double Surchage { get; set; } // phí phụ thu
-
-        public double TotalCost { get; set; } //tổng thanh toán
+        public double Amount { get; set; } //tổng thanh toán
 
         public double Deposited { get; set; } //đã đặt cọc
 
-        public double FinalCost { get; set; } // phải trả
-
         public int PayMethod { get; set; } // hình thức thanh toán
-
-        //public string CusId { get; set; } //mã khách hàng
-        //public AppUser User { get; set; }
 
         public int Status { get; set; } //Trạng thái
 

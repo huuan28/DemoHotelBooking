@@ -17,7 +17,7 @@
     {
         public int Id { get; set; }
 
-        public string CusID { get; set; } // Id khách hàng
+        public string? CusID { get; set; } // Id khách hàng
 
         public AppUser Customer { get; set; }
 
@@ -31,9 +31,9 @@
 
         public DateTime CheckoutDate { get; set; } // ngày trả dự kiến
 
-        public int Status { get; set; } // trạng thái đặt phòng
+        public int? Status { get; set; } // trạng thái đặt phòng
 
-        public double TotalCost { get; set; }
+        public double? Amount { get; set; } //chi phí tổng
 
 
         //hàm tính ngày thuê
