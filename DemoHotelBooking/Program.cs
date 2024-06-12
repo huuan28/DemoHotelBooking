@@ -25,7 +25,7 @@ namespace DemoHotelBooking
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
-                options.User.RequireUniqueEmail = false;
+                options.User.RequireUniqueEmail = false;             
             }).AddEntityFrameworkStores<AppDbContext>();
             var app = builder.Build();
 
@@ -41,6 +41,13 @@ namespace DemoHotelBooking
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=RoomManager}/{action=AllRoomList}/{id?}"
+                );
+            });
             app.MapControllerRoute(
                  name: "default",
                  pattern: "{controller=Home}/{action=Index}/{id?}");
