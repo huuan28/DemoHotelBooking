@@ -10,7 +10,7 @@ namespace DemoHotelBooking.Models
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }
 
-        public string RoomId { get; set; }
+        public int RoomId { get; set; }
         public Room Room { get; set; }
 
         public DateTime CheckoutDate { get; set; }

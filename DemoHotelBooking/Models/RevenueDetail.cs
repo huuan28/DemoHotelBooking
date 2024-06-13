@@ -10,9 +10,9 @@ namespace DemoHotelBooking.Models
         public int RevenueId { get; set; }
         public Revenue Revenue { get; set; }
 
-        public string RoomID { get; set; }
+        public int RoomID { get; set; }
         public Room Room { get; set; }
 
-        public double RR { get; set; } // Revenue of room (doanh thu phòng)
+        public double RevenueOfRoom { get; set; } // doanh thu phòng
     }
 }

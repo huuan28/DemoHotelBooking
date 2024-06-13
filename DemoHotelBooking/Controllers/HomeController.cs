@@ -15,9 +15,8 @@ namespace DemoHotelBooking.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index","Room");
         }
-
         public IActionResult Privacy()
         {
             return View();

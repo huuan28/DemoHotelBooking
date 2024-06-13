@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DemoHotelBooking.Models
+namespace DemoHotelBooking.ViewModels
 {
-    public class Room
+    public class RoomViewModel
     {
-        [Key]
-        public int Id { get; set; } 
+        public int Id { get; set; }
 
-        [Required]
         [Display(Name = "Mã phòng")]
         public string Name { get; set; } //mã phòng (STD..., SUP..., DLX..., SUT) 
 

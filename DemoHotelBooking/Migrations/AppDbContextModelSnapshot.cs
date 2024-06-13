@@ -75,9 +75,8 @@ namespace DemoHotelBooking.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -184,9 +183,8 @@ namespace DemoHotelBooking.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
                     b.Property<int>("SurchageRate")
                         .HasColumnType("int");
@@ -230,15 +228,14 @@ namespace DemoHotelBooking.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<double>("RR")
-                        .HasColumnType("float");
-
                     b.Property<int>("RevenueId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoomID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<double>("RevenueOfRoom")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RoomID")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -251,8 +248,11 @@ namespace DemoHotelBooking.Migrations
 
             modelBuilder.Entity("DemoHotelBooking.Models.Room", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<int>("DAP")
                         .HasColumnType("int");
@@ -271,6 +271,10 @@ namespace DemoHotelBooking.Migrations
 
                     b.Property<int>("MAP")
                         .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -302,9 +306,8 @@ namespace DemoHotelBooking.Migrations
                     b.Property<bool>("IsDefault")
                         .HasColumnType("bit");
 
-                    b.Property<string>("RoomId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

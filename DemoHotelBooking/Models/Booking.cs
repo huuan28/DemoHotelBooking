@@ -1,17 +1,17 @@
 ﻿namespace DemoHotelBooking.Models
 {
-    public enum PAYMETHOD
+    public enum PaymentMedthod
     { 
-        CASH = 0,
+        Cash = 0,
         VNPAY = 1
     }
-    public enum BOOKINGSTATUS
+    public enum BookingState
     { 
-        NONE = 0,
-        DEPOSITED = 1,
-        SUCCESS = 2,
-        CHANGED = 3,
-        CANCELLED = 4
+        creating = 0,
+        Deposited = 1,
+        Success = 2,
+        Change = 3,
+        Cancelled = 4
     }
     public class Booking
     {
@@ -35,19 +35,27 @@
 
         public double? Amount { get; set; } //chi phí tổng
 
+        public Booking()
+        {
+            Paymethod = 1;
+            Status = (int?)BookingState.creating;
+            CheckinDate = DateTime.Now;
+            CreateDate = DateTime.Now;
+        }
 
         //hàm tính ngày thuê
-        public int SoNgayThue(DateTime startDate, DateTime endDate)
+        public static int SoNgayThue(DateTime startDate, DateTime endDate)
         {
             return endDate.Day - startDate.Day;
         }
         //hàm tính giờ thuê
-        public int SoGioThue(DateTime startDate, DateTime endDate)
+        public static int SoGioThue(DateTime startDate, DateTime endDate)
         {
             int start = startDate.Hour, end = endDate.Hour;
             if (start > end) // qua đêm
                 return 12;
             return end - start;
         }
+
     }
 }

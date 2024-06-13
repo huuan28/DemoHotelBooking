@@ -44,8 +44,15 @@ namespace DemoHotelBooking
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                  name: "areas",
+                  name: "Admin",
                   pattern: "{area:exists}/{controller=RoomManager}/{action=AllRoomList}/{id?}"
+                );
+            });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                  name: "Receptionist",
+                  pattern: "{area:exists}/{controller=Room}/{action=Index}/{id?}"
                 );
             });
             app.MapControllerRoute(

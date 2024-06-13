@@ -1,0 +1,154 @@
+﻿@model DemoHotelBooking.ViewModels.BookingViewModel
+
+@{
+    ViewData["Title"] = "Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var rooms = ViewData["availbleRooms"] as List<DemoHotelBooking.Models.Room>;
+    var bookings = ViewData["bookingRooms"] as List<DemoHotelBooking.Models.Room>;
+}
+
+<h1>Booking</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Booking" id="bookingForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input asp-for="Phone" class="form-control" required />
+                        </div>
+                        <div class="form-group">
+                            <label>Họ và tên</label>
+                            <input asp-for="Name" class="form-control" required/>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="hidden" asp-for="Phone" class="form-control" />
+                        <input type="hidden" asp-for="Name" class="form-control" />
+                    }
+                    <div class="form-group">
+                        <label asp-for="Deposit" class="control-label"></label>
+                        <input asp-for="Deposit" class="form-control" />
+                        <span asp-validation-for="Deposit" class="text-danger"></span>
+                    </div>
+                    <!--Time-->
+                    <div class="form-group">
+                        <label asp-for="CheckinDate" class="control-label"></label>
+                        <input type="datetime-local" name="CheckinDate" class="form-control" id="CheckInDate" />
+                        <span asp-validation-for="CheckinDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CheckoutDate" class="control-label"></label>
+                        <input type="datetime-local" name="CheckoutDate" class="form-control" id="CheckOutDate" />
+                        <span asp-validation-for="CheckoutDate" class="text-danger"></span>
+                    </div>
+                    <!---->
+                    <div class="form-group">
+                        <label asp-for="Amount" class="control-label"></label>
+                        <input asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2>Chọn Phòng</h2>
+        <div id="availbleRoomList">
+            @Html.Partial("ListRoomAvailble", rooms)
+        </div>
+        <div id="roomListContainer">
+            @Html.Partial("BookingRooms", bookings)
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--AJAX-->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function registerAddRoomButtons() {
+                $('.addRoomButton').off('click').on('click', function () {
+                    var roomId = $(this).data('room-id');
+
+                    $.ajax({
+                        url: '@Url.Action("AddRoom", "Booking")',
+                        type: 'GET',
+                        data: { id: roomId },
+                        success: function (result) {
+                            $('#roomListContainer').html(result);
+                            registerRemoveRoomButtons()
+                        },
+                        error: function () {
+                            alert('An error has occurred');
+                        }
+                    });
+                });
+            }
+            function registerRemoveRoomButtons() {
+                $('.removeRoomButton').off('click').on('click', function () {
+                    var id = $(this).data('room-id');
+
+                    $.ajax({
+                        url: '@Url.Action("RemoveRoom", "Booking")',
+                        type: 'GET',
+                        data: { id: id },
+                        success: function (result) {
+                            console.log("remove:" + id);
+                            $('#roomListContainer').html(result);
+                            registerRemoveRoomButtons()
+                        },
+                        error: function () {
+                            alert('An error has occurred');
+                        }
+                    });
+                });
+            }
+            //updatetime
+            function updateTime() {
+                var checkIn = $('#CheckInDate').val();
+                var checkOut = $('#CheckOutDate').val();
+                console.log(checkIn);
+                $.ajax({
+                    url: '@Url.Action("UpdateTime", "Booking")',
+                    type: 'POST',
+                    data: {
+                        start: checkIn,
+                        end: checkOut
+                    },
+                    success: function (result) {
+                        $('#availbleRoomList').html(result);
+                        registerAddRoomButtons();
+                        //registerRemoveRoomButtons();
+                    },
+                    error: function () {
+                        alert('An error has occurred');
+                    }
+                });
+            }
+
+            $('#CheckInDate').change(updateTime);
+            $('#CheckOutDate').change(updateTime);
+
+            registerAddRoomButtons();
+            registerRemoveRoomButtons();
+        });
+
+    </script>
+}

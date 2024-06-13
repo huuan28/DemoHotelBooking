@@ -16,7 +16,14 @@ namespace DemoHotelBooking.Models
             {
                 await roleManager.CreateAsync(new IdentityRole("Customer"));
             }
-
+            if (!await roleManager.RoleExistsAsync("Receptionist"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Receptionist"));
+            }
+            if (!await roleManager.RoleExistsAsync("Accountant"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Accountant"));
+            }
             // Tạo tài khoản admin mặc định nếu chưa tồn tại
             if (userManager.Users.All(u => u.UserName != "admin"))
             {
@@ -32,15 +39,30 @@ namespace DemoHotelBooking.Models
             // Danh sách các khách hàng cần thêm
             var customers = new List<AppUser>
             {
-                 new AppUser { UserName = "customer1@example.com",FullName = "An", Email = "customer1@example.com" },
-                 new AppUser { UserName = "customer2@example.com",FullName = "Hao", Email = "customer2@example.com" },
-                 new AppUser { UserName = "customer3@example.com",FullName = "Manh", Email = "customer3@example.com" },
-                 new AppUser { UserName = "customer4@example.com",FullName = "Hien", Email = "customer4@example.com" },
-                 new AppUser { UserName = "customer5@example.com",FullName = "Tuan", Email = "customer5@example.com" },
-                 new AppUser { UserName = "khachhang",FullName = "Khách hàng", Email = "customer5@example.com" },
+                 new AppUser { UserName = "an",FullName = "An", Email = "customer1@example.com" },
+                 new AppUser { UserName = "hao",FullName = "Hào", Email = "customer2@example.com" },
+                 new AppUser { UserName = "manh",FullName = "Mạnh", Email = "customer3@example.com" },
+                 new AppUser { UserName = "tuan",FullName = "Tuấn", Email = "customer5@example.com" },
              };
-
-            var password = "khachhang123";
+            if (userManager.Users.All(u => u.UserName != "letan"))
+            {
+                var user = new AppUser { UserName = "letan" };
+                var result = await userManager.CreateAsync(user, "123123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Receptionist");
+                }
+            }
+            if (userManager.Users.All(u => u.UserName != "ketoan"))
+            {
+                var user = new AppUser { UserName = "ketoan" };
+                var result = await userManager.CreateAsync(user, "123123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Accountant");
+                }
+            }
+            var password = "123123";
 
             foreach (var customer in customers)
             {
