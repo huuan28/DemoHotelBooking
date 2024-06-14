@@ -1,4 +1,5 @@
 using DemoHotelBooking.Models;
+using DemoHotelBooking.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,10 +26,11 @@ namespace DemoHotelBooking
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
-                options.User.RequireUniqueEmail = false;             
-            }).AddEntityFrameworkStores<AppDbContext>();
-            var app = builder.Build();
+                options.User.RequireUniqueEmail = false;
+            }).AddEntityFrameworkStores<AppDbContext>();            
 
+            builder.Services.AddSingleton<IVnPayService, VnPayService>();
+            var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -54,10 +56,16 @@ namespace DemoHotelBooking
                   name: "Receptionist",
                   pattern: "{area:exists}/{controller=Room}/{action=Index}/{id?}"
                 );
+                endpoints.MapControllerRoute(
+                  name: "paymentReturn",
+                  pattern: "Booking/PaymentReturn",
+                  defaults: new { controller = "Booking", action = "PaymentReturn" });
             });
             app.MapControllerRoute(
                  name: "default",
                  pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;

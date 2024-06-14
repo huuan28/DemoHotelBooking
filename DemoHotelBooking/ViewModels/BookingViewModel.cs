@@ -6,12 +6,12 @@ namespace DemoHotelBooking.ViewModels
     public class BookingViewModel
     {
         [Phone, Required]
-        public string? Phone { get; set; } // Id khách hàng
+        public string? Phone { get; set; } // sdt khách hàng
 
         [Required]
         public string? Name { get; set; }
 
-        public double Deposit { get; set; } //tiền cọc
+        public double? Deposit { get; set; } //tiền cọc
 
         public DateTime CheckinDate { get; set; } //ngày nhận dự kiến
 
@@ -19,7 +19,6 @@ namespace DemoHotelBooking.ViewModels
 
         public double? Amount { get; set; } //chi phí tổng
 
-        public List<Room> Rooms { get; set; }
         public BookingViewModel()
         {
             CheckinDate = DateTime.Now;
