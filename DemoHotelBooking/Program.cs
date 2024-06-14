@@ -1,4 +1,4 @@
-using DemoHotelBooking.Models;
+﻿using DemoHotelBooking.Models;
 using DemoHotelBooking.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +11,20 @@ namespace DemoHotelBooking
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(720);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             var connectionString = builder.Configuration.GetConnectionString("SQLServerIdentityConnection") ?? throw new InvalidOperationException("Connection string 'SQLServerIdentityConnection' not found.");
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(connectionString));
-
+            //tài khoản người dùng
             builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
@@ -29,6 +36,7 @@ namespace DemoHotelBooking
                 options.User.RequireUniqueEmail = false;
             }).AddEntityFrameworkStores<AppDbContext>();            
 
+            //thanh toán vnpay
             builder.Services.AddSingleton<IVnPayService, VnPayService>();
             var app = builder.Build();
             // Configure the HTTP request pipeline.
@@ -36,6 +44,7 @@ namespace DemoHotelBooking
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();

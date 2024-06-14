@@ -158,7 +158,4 @@ namespace DemoHotelBooking.Helper
             return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
         }
     }
-
-
-
 }

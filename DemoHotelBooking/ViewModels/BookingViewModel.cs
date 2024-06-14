@@ -19,8 +19,14 @@ namespace DemoHotelBooking.ViewModels
 
         public double? Amount { get; set; } //chi phí tổng
 
+        public List<Room> SelectedRooms { get; set; }
+
+        public List<Room> AvailbleRooms { get; set; }
+
         public BookingViewModel()
         {
+            SelectedRooms = new List<Room>();
+            AvailbleRooms = new List<Room>();
             CheckinDate = DateTime.Now;
             CheckoutDate = DateTime.Now;
         }

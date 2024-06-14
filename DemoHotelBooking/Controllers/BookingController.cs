@@ -3,6 +3,7 @@ using DemoHotelBooking.Services;
 using DemoHotelBooking.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 
 namespace DemoHotelBooking.Controllers
@@ -14,14 +15,9 @@ namespace DemoHotelBooking.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
         private readonly IVnPayService _vnPayService;
-        private static int bookingId;
 
-        private static List<Room> bookingRooms = new List<Room>();
-        private static List<Room> availbleRooms = new List<Room>();
-        private static Booking currentBooking = new Booking();
-        private DateTime start;
-        private DateTime end;
-        private static AppUser currentUser;
+        private BookingViewModel currentBooking;
+        private AppUser currentUser;
         public BookingController(AppDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IVnPayService service)
         {
             _vnPayService = service;
@@ -29,34 +25,41 @@ namespace DemoHotelBooking.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-            availbleRooms = GetRooms(currentBooking.CheckinDate, currentBooking.CheckoutDate);
         }
         private Task<AppUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-        public List<Room> GetRooms(DateTime start, DateTime end)
+
+        private BookingViewModel GetBookingFromSession()
         {
-            var rooms = _context.Rooms.ToList();
-            var list = new List<Room>();
-            foreach (var room in rooms)
+            var bookingJson = HttpContext.Session.GetString("CurrentBooking");
+            if (string.IsNullOrEmpty(bookingJson))
             {
-                if (RoomIsAvailble(room.Id, start, end))
-                { list.Add(room); }
+                return new BookingViewModel();
             }
-            return list;
+            return JsonConvert.DeserializeObject<BookingViewModel>(bookingJson);
         }
+        private void SaveBookingToSession(BookingViewModel booking)
+        {
+            var bookingJson = JsonConvert.SerializeObject(booking);
+            HttpContext.Session.SetString("CurrentBooking", bookingJson);
+        }
+
+        //Đặt phòng
         [HttpGet]
         public async Task<IActionResult> Booking(int? id)
         {
-            ViewData["availbleRooms"] = availbleRooms;
-            ViewData["bookingRooms"] = bookingRooms;
+            currentBooking = GetBookingFromSession();
+            UpDateAvailbleRooms();
             currentUser = await GetCurrentUserAsync();
-            if (currentUser == null)
-                return View();
-            BookingViewModel viewModel = new BookingViewModel
+            if (currentUser != null)
             {
-                Phone = currentUser.PhoneNumber,
-                Name = currentUser.FullName
-            };
-            return View(viewModel);
+                currentBooking.Phone = currentUser.PhoneNumber;
+                currentBooking.Name = currentUser.FullName;
+            }
+
+            ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+            ViewData["bookingRooms"] = currentBooking.SelectedRooms;
+            SaveBookingToSession(currentBooking);
+            return View(currentBooking);
         }
         [HttpPost]
         public async Task<IActionResult> Booking(BookingViewModel model)
@@ -64,59 +67,64 @@ namespace DemoHotelBooking.Controllers
             if (ModelState.IsValid)
             {
                 TimeSpan stayDuration = model.CheckoutDate - model.CheckinDate;
-                int numberOfDays = stayDuration.Days + 1;
+                int numberOfDays = stayDuration.Days;
                 var user = _context.Users.FirstOrDefault(i => i.PhoneNumber == model.Phone);
-                //Kiểm tra đăng nhập
+                //Kiểm tra đã đăng ký chưa
                 if (user == null)
                 {
-                    CreateUnRegisterUser(model.Phone, model.Name);
-                    user = _context.Users.FirstOrDefault(i => i.PhoneNumber == model.Phone);
+                    CreateUnRegisterUser(model.Phone, model.Name); //lưu tài khoản loại chưa đăng ký
+                    user = await _userManager.FindByNameAsync(model.Phone);
                 }
-                DateTime dateTime = DateTime.Now;
-                currentBooking.CreateDate = dateTime;
+                //if (!user.IsRegisted)
+                //{
+                //    user.FullName = model.Name;
+                //    _context.Users.Add(user);
+                //}
+                currentBooking = GetBookingFromSession();
                 currentBooking.CheckinDate = model.CheckinDate;
-                currentBooking.CheckoutDate = model.CheckoutDate;
-                currentBooking.Deposit = bookingRooms.Sum(i => i.Price) * 0.2 * numberOfDays;
-                currentBooking.Amount = bookingRooms.Sum(i => i.Price);
-                currentBooking.CusID = user.Id;
-                _context.Bookings.Add(currentBooking);
-                await _context.SaveChangesAsync();
-
-                currentBooking = _context.Bookings.FirstOrDefault(i => i.CusID == user.Id && i.CreateDate == dateTime);
-
+                currentBooking.CheckinDate = model.CheckinDate;
+                currentBooking.Name = model.Name;
+                currentBooking.Phone = model.Phone;
+                currentBooking.Deposit = currentBooking.SelectedRooms.Sum(i => i.Price) * 0.2 * numberOfDays;
+                currentBooking.Amount = currentBooking.SelectedRooms.Sum(i => i.Price) * numberOfDays;
+                SaveBookingToSession(currentBooking);
                 var vnPayModel = new VnPaymentRequestModel()
                 {
                     Amount = (double)currentBooking.Deposit,
-                    CreateDate = currentBooking.CreateDate,
+                    CreateDate = DateTime.Now,
                     Description = $"{model.Phone}-{model.Name}",
                     FullName = model.Name,
                     BookingId = new Random().Next(1, 1000)
                 };
                 return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
             }
-            ViewData["availbleRooms"] = availbleRooms;
-            ViewData["bookingRooms"] = bookingRooms;
+            ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+            ViewData["bookingRooms"] = currentBooking.SelectedRooms;
             return View(model);
 
         }
         public IActionResult AddRoom(int Id)
         {
+            currentBooking = GetBookingFromSession();
             var room = _context.Rooms.Find(Id);
-            if (!bookingRooms.Any(i => i.Id == Id))
-                bookingRooms.Add(room);
-            ViewData["availbleRooms"] = availbleRooms;
-            ViewData["bookingRooms"] = bookingRooms;
-            return PartialView("BookingRooms", bookingRooms);
+            if (!currentBooking.SelectedRooms.Any(i => i.Id == Id))
+                currentBooking.SelectedRooms.Add(room);
+            ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+            ViewData["bookingRooms"] = currentBooking.SelectedRooms;
+            SaveBookingToSession(currentBooking);
+            return PartialView("BookingRooms", currentBooking.SelectedRooms);
         }
         public IActionResult RemoveRoom(int id)
         {
-            var room = bookingRooms.FirstOrDefault(i => i.Id == id);
+            currentBooking = GetBookingFromSession();
+            var room = currentBooking.SelectedRooms.FirstOrDefault(i => i.Id == id);
             if (room == null)
                 return NotFound();
-            bookingRooms.Remove(room);
-            ViewData["availbleRooms"] = availbleRooms;
-            ViewData["bookingRooms"] = bookingRooms;
-            return PartialView("BookingRooms", bookingRooms);
+            currentBooking.SelectedRooms.Remove(room);
+            SaveBookingToSession(currentBooking);
+            ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+            ViewData["bookingRooms"] = currentBooking.SelectedRooms;
+            return PartialView("BookingRooms", currentBooking.SelectedRooms);
         }
         //Kiểm tra lịch
         public bool RoomIsAvailble(int roomId, DateTime startDate, DateTime endDate)
@@ -138,15 +146,25 @@ namespace DemoHotelBooking.Controllers
         [HttpPost]
         public IActionResult UpdateTime(DateTime start, DateTime end)
         {
+            currentBooking = GetBookingFromSession();
             currentBooking.CheckinDate = start;
             currentBooking.CheckoutDate = end;
-            //return Json(new {success = true});
-            availbleRooms = GetRooms(start, end);
-            ViewData["availbleRooms"] = availbleRooms;
-            ViewData["bookingRooms"] = bookingRooms;
-            return PartialView("ListRoomAvailble", availbleRooms);
+            UpDateAvailbleRooms();
+            ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+            ViewData["bookingRooms"] = currentBooking.SelectedRooms;
+            return PartialView("ListRoomAvailble", currentBooking.AvailbleRooms);
         }
-
+        public void UpDateAvailbleRooms()
+        {
+            var rooms = _context.Rooms.ToList();
+            currentBooking.AvailbleRooms.Clear();
+            foreach (var room in rooms)
+            {
+                if (RoomIsAvailble(room.Id, currentBooking.CheckinDate, currentBooking.CheckoutDate))
+                { currentBooking.AvailbleRooms.Add(room); }
+            }
+            SaveBookingToSession(currentBooking);
+        }
         public async Task<bool> CreateUnRegisterUser(string Phone, string FullName)
         {
             bool flag = _context.Users.Any(i => i.PhoneNumber == Phone);
@@ -179,7 +197,6 @@ namespace DemoHotelBooking.Controllers
 
         public async Task<IActionResult> PaymentCallBack()
         {
-
             var response = _vnPayService.PaymentExecute(Request.Query);
             if (response == null || response.VnPayResponseCode != "00")
             {
@@ -188,19 +205,34 @@ namespace DemoHotelBooking.Controllers
             // Xử lý logic sau khi thanh toán hoàn tất tại đây
 
             //tạo chi tiết đặt phòng
-            int id = currentBooking.Id;
-            foreach (var room in bookingRooms)
+            currentBooking = GetBookingFromSession();
+            var user = await _userManager.FindByNameAsync(currentBooking.Phone);
+            var booking = new Booking
+            {
+                CreateDate = DateTime.Now,
+                CheckinDate = currentBooking.CheckinDate,
+                CheckoutDate = currentBooking.CheckoutDate,
+                Deposit = (double)currentBooking.Deposit,
+                Amount = currentBooking.Amount,
+                CusID = user.Id
+            };
+            _context.Bookings.Add(booking);
+            await _context.SaveChangesAsync();
+            foreach (var room in currentBooking.SelectedRooms)
             {
                 var detail = new BookingDetail
                 {
-                    BookingId = currentBooking.Id,
+                    BookingId = booking.Id,
                     RoomId = room.Id,
                     Price = room.Price
                 };
                 _context.BookingDetails.Add(detail);
-                currentBooking.Status = 2;
                 await _context.SaveChangesAsync();
             }
+            booking.Status = 2;
+            await _context.SaveChangesAsync();
+            currentBooking = new BookingViewModel();
+            SaveBookingToSession(currentBooking);
             // Lấy thông tin từ query string của VnPay để xác thực và cập nhật trạng thái đơn hàng
             return RedirectToAction("PaymentSuccess");
         }

@@ -42,11 +42,7 @@ namespace DemoHotelBooking.Services
                     vnpay.AddResponseData(key, value.ToString());
                 }
             }
-            long vnp_orderId;
-            if (!long.TryParse(vnpay.GetResponseData("vnp_TnxRef"), out vnp_orderId))
-            {
-                vnp_orderId = 111222333444;
-            }
+            string vnp_orderId = vnpay.GetResponseData("vnp_TxnRef");
             var vnp_TransactionId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));
             var vnp_SecureHash = collection.FirstOrDefault(i => i.Key == "vnp_SecureHash").Value;
             var vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
@@ -64,7 +60,7 @@ namespace DemoHotelBooking.Services
                 Success = true,
                 PaymentMethod = "VnPay",
                 OrderDescription = vnp_OrderInfo,
-                OrderId = vnp_orderId.ToString(),
+                OrderId = vnp_orderId,
                 TransactionId = vnp_TransactionId.ToString(),
                 Token = vnp_SecureHash.ToString(),
                 VnPayResponseCode = vnp_ResponseCode.ToString(),
