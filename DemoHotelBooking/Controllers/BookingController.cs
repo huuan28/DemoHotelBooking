@@ -28,6 +28,7 @@ namespace DemoHotelBooking.Controllers
         }
         private Task<AppUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
+        //Lấy thông tin đặt phòng từ session
         private BookingViewModel GetBookingFromSession()
         {
             var bookingJson = HttpContext.Session.GetString("CurrentBooking");
@@ -37,6 +38,7 @@ namespace DemoHotelBooking.Controllers
             }
             return JsonConvert.DeserializeObject<BookingViewModel>(bookingJson);
         }
+        //Lưu thông tin đặt phòng vào session
         private void SaveBookingToSession(BookingViewModel booking)
         {
             var bookingJson = JsonConvert.SerializeObject(booking);
@@ -103,6 +105,7 @@ namespace DemoHotelBooking.Controllers
             return View(model);
 
         }
+        //Chọn phòng
         public IActionResult AddRoom(int Id)
         {
             currentBooking = GetBookingFromSession();
@@ -114,6 +117,7 @@ namespace DemoHotelBooking.Controllers
             SaveBookingToSession(currentBooking);
             return PartialView("BookingRooms", currentBooking.SelectedRooms);
         }
+        //Bỏ chọn phòng
         public IActionResult RemoveRoom(int id)
         {
             currentBooking = GetBookingFromSession();
@@ -154,6 +158,7 @@ namespace DemoHotelBooking.Controllers
             ViewData["bookingRooms"] = currentBooking.SelectedRooms;
             return PartialView("ListRoomAvailble", currentBooking.AvailbleRooms);
         }
+        //cập nhật phòng trống
         public void UpDateAvailbleRooms()
         {
             var rooms = _context.Rooms.ToList();
@@ -165,6 +170,7 @@ namespace DemoHotelBooking.Controllers
             }
             SaveBookingToSession(currentBooking);
         }
+        //tạo tài khoản cho người chưa đăng ký
         public async Task<bool> CreateUnRegisterUser(string Phone, string FullName)
         {
             bool flag = _context.Users.Any(i => i.PhoneNumber == Phone);
@@ -195,18 +201,24 @@ namespace DemoHotelBooking.Controllers
             return true;
         }
 
+
+        //kết quả trả về của VNPAY
         public async Task<IActionResult> PaymentCallBack()
         {
+            // Lấy thông tin từ query string của VnPay để xác thực và cập nhật trạng thái đơn hàng
             var response = _vnPayService.PaymentExecute(Request.Query);
             if (response == null || response.VnPayResponseCode != "00")
             {
+                //thanh toán thất bại
                 return RedirectToAction("PaymentFail");
             }
-            // Xử lý logic sau khi thanh toán hoàn tất tại đây
 
-            //tạo chi tiết đặt phòng
+            //lấy thông tin đặt phòng từ viewmodel
             currentBooking = GetBookingFromSession();
+
+            //lấy thông tin khách hàng
             var user = await _userManager.FindByNameAsync(currentBooking.Phone);
+            // tạo mới đơn đặt phòng
             var booking = new Booking
             {
                 CreateDate = DateTime.Now,
@@ -214,10 +226,14 @@ namespace DemoHotelBooking.Controllers
                 CheckoutDate = currentBooking.CheckoutDate,
                 Deposit = (double)currentBooking.Deposit,
                 Amount = currentBooking.Amount,
-                CusID = user.Id
+                CusID = user.Id,
+                Status = (int?)BookingState.Deposited
             };
+            //lưu vào DB
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
+
+            //thêm và lưu danh sách phòng đã chọn
             foreach (var room in currentBooking.SelectedRooms)
             {
                 var detail = new BookingDetail
@@ -229,11 +245,9 @@ namespace DemoHotelBooking.Controllers
                 _context.BookingDetails.Add(detail);
                 await _context.SaveChangesAsync();
             }
-            booking.Status = 2;
-            await _context.SaveChangesAsync();
-            currentBooking = new BookingViewModel();
-            SaveBookingToSession(currentBooking);
-            // Lấy thông tin từ query string của VnPay để xác thực và cập nhật trạng thái đơn hàng
+            //xóa viewmodel
+            HttpContext.Session.Remove("currentBooking");
+            
             return RedirectToAction("PaymentSuccess");
         }
         public IActionResult PaymentSuccess()

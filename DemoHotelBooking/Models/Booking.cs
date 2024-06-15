@@ -7,11 +7,10 @@
     }
     public enum BookingState
     { 
-        creating = 0,
-        Deposited = 1,
-        Success = 2,
-        Change = 3,
-        Cancelled = 4
+        Deposited = 0,
+        Change = 1,
+        Cancelled = 2,
+        CheckedIn = 3
     }
     public class Booking
     {
