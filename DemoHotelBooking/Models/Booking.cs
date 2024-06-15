@@ -7,10 +7,10 @@
     }
     public enum BookingState
     { 
-        Deposited = 0,
-        Change = 1,
-        Cancelled = 2,
-        CheckedIn = 3
+        Deposited = 1,
+        Change = 2,
+        Cancelled = 3,
+        CheckedIn = 4
     }
     public class Booking
     {
@@ -37,7 +37,6 @@
         public Booking()
         {
             Paymethod = 1;
-            Status = (int?)BookingState.creating;
             CheckinDate = DateTime.Now;
             CreateDate = DateTime.Now;
         }
