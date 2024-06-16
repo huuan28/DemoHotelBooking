@@ -82,7 +82,7 @@ namespace DemoHotelBooking
                 {
                     var userManager = services.GetRequiredService<UserManager<AppUser>>();
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                    SeedData.Initialize(userManager, roleManager).GetAwaiter().GetResult();
+                    SeedData.Initialize(userManager, roleManager,app).GetAwaiter().GetResult();
                 }
                 catch (Exception ex)
                 {
