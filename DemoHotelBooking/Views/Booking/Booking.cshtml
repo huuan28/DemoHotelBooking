@@ -7,10 +7,9 @@
     var bookings = ViewData["bookingRooms"] as List<DemoHotelBooking.Models.Room>;
 }
 
-<h1>Booking</h1>
 
 <hr />
-<div class="row">
+@* <div class="row">
     <div class="col-md-6">
         <div class="row">
             <div class="col-md-4">
@@ -61,20 +60,97 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <h2>Chọn Phòng</h2>
-        <div id="availbleRoomList">
-            @Html.Partial("ListRoomAvailble", rooms)
-        </div>
+    <div class="col-md-6">       
         <div id="roomListContainer">
             @Html.Partial("BookingRooms", bookings)
+        </div>
+    </div>
+</div> *@
+
+<div class="container">
+    <div class="text-center wow fadeInUp" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+        <h6 class="section-title text-center text-primary text-uppercase">Room Booking</h6>
+        <h1 class="mb-5">Book A <span class="text-primary text-uppercase">Luxury Room</span></h1>
+    </div>
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div id="roomListContainer">
+                @Html.Partial("BookingRooms", bookings)
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                <h1>Booking</h1>
+            </div>
+            <div class="wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                <form asp-action="Booking" id="bookingForm">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row g-3">
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Name" type="text" class="form-control" id="name" placeholder="Your Name" required>
+                                    <label for="name">Họ và tên</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Phone" type="text" class="form-control" id="phone" placeholder="Your Phone" required>
+                                    <label for="phone">Số Điện Thoại</label>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="hidden" asp-for="Phone" class="form-control" />
+                            <input type="hidden" asp-for="Name" class="form-control" />
+                        }
+                        <div class="col-12">
+                            <div class="form-floating">                               
+                                <label asp-for="Deposit" for="select3" class="control-label"></label>
+                                <input disabled="disabled" asp-for="Deposit" class="form-control" />
+                                <span asp-validation-for="Deposit" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <!--Time-->
+                        <div class="col-md-6">
+                            <div class="form-floating date" id="date3" data-target-input="nearest">
+                                <input type="datetime-local" class="form-control datetimepicker-input" name="CheckinDate" id="CheckInDate" placeholder="Check In" data-target="#date3" data-toggle="datetimepicker">
+                                <label asp-for="CheckinDate" class="control-label" for="CheckInDate">Check In Date</label>
+                                <span asp-validation-for="CheckinDate" class="text-danger"></span>
+                            </div>
+                        </div>    
+                        <div class="col-md-6">
+                            <div class="form-floating date" id="date4" data-target-input="nearest">
+                                <input type="datetime-local" name="CheckoutDate" class="form-control datetimepicker-input" id="CheckOutDate" placeholder="Check Out" data-target="#date4" data-toggle="datetimepicker">
+                                <label asp-for="CheckoutDate" class="control-label" for="CheckOutDate">Check Out</label>
+                                <span asp-validation-for="CheckoutDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <!---->
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <label asp-for="Amount" for="select3" class="control-label"></label>
+                                <input disabled="disabled" asp-for="Amount" class="form-control" />
+                                <span asp-validation-for="Amount" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <input type="submit" value="Create" class="btn btn-primary w-100 py-3" />
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
+<div id="availbleRoomList">
+    @Html.Partial("ListRoomAvailble", rooms)
+</div>
 
 
 
