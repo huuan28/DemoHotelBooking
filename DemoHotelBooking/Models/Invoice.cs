@@ -2,13 +2,6 @@
 
 namespace DemoHotelBooking.Models
 {
-    public enum InvoiceState
-    {
-        None = 0,
-        CheckedIn = 1, //đã nhận phòng
-        CheckedOut = 2, //đã trả hết
-        PaidOut = 3
-    }
     public class Invoice
     {
         [Key]
@@ -23,11 +16,13 @@ namespace DemoHotelBooking.Models
 
         public double Amount { get; set; } //tổng thanh toán
 
-        public double Deposited { get; set; } //đã đặt cọc
-
         public int PayMethod { get; set; } // hình thức thanh toán
 
         public int Status { get; set; } //Trạng thái
+
+        public string ReceptionistId { get; set; }
+
+        public AppUser Receptionist { get; set; }
 
     }
 }

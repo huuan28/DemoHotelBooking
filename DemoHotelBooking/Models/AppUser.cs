@@ -5,32 +5,17 @@ namespace DemoHotelBooking.Models
 {
     public class AppUser : IdentityUser
     {
-
-        [Required]
         [Display(Name ="Họ và tên")]
         public string FullName { get; set; }
 
-        public string SearchKey { get; set; } //Từ khóa tìm kiếm tài khoản (KH.../NV...)
+        public string? CCCD { get; set; }
+
+        public bool? Gender { get; set; }
+
+        public string? Address { get; set; }
+
+        public DateTime? DoB { get; set; }
 
         public bool IsRegisted { get; set; } //đã đăng ký hay chưa (để đánh dấu khách vãng lai)
-
-
-        //Hàm này để sinh mã tìm kiếm của tài khoản
-        public static string GenerateSearchKey(string role)
-        {
-            string max = GetMaxNum(role);
-            switch (role)
-            {
-                case "Customer":
-                    return "KH" + max;
-                case "Receptionist":
-                    return "NV" + max;
-            }
-            return "";
-        }
-        private static string GetMaxNum(string role)
-        {
-            return "000";
-        }
     }
 }

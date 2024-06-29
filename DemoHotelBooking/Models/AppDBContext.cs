@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace DemoHotelBooking.Models
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -13,8 +12,8 @@ namespace DemoHotelBooking.Models
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingDetail> BookingDetails { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
-        public DbSet<Revenue> Revenues { get; set; }
-        public DbSet<RevenueDetail> RevenueDetails { get; set; }
+        public DbSet<ReportRevenue> ReportRevenues { get; set; }
+        public DbSet<ReportDetail> ReportDetails { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<RoomImage> RoomImages { get; set; }
 
@@ -23,13 +22,16 @@ namespace DemoHotelBooking.Models
             base.OnModelCreating(builder);
 
             //Bỏ tiền tố aspnet các bảng Identity
-            builder.Entity<IdentityUser>(entity => { entity.ToTable(name: "Users"); });
+            builder.Entity<AppUser>(entity => { entity.ToTable(name: "Users"); });
             builder.Entity<IdentityRole>(entity => { entity.ToTable(name: "Roles"); });
             builder.Entity<IdentityUserRole<string>>(entity => { entity.ToTable("UserRoles"); });
-            builder.Entity<IdentityUserClaim<string>>(entity => { entity.ToTable("UserClaims"); });
-            builder.Entity<IdentityUserLogin<string>>(entity => { entity.ToTable("UserLogins"); });
-            builder.Entity<IdentityRoleClaim<string>>(entity => { entity.ToTable("RoleClaims"); });
-            builder.Entity<IdentityUserToken<string>>(entity => { entity.ToTable("UserTokens"); });
+
+            builder.Entity<BookingDetail>().HasKey(i => new { i.BookingId, i.RoomId });
+            builder.Entity<InvoiceDetail>().HasKey(i => new { i.InvoiceId, i.RoomId });
+            builder.Entity<ReportDetail>().HasKey(i => new { i.ReportId, i.RoomId });
+            builder.Entity<Feedback>().HasKey(i => new { i.CusId});
+
+
 
             builder.Entity<Booking>()
                 .HasOne(i => i.Customer)
@@ -48,15 +50,13 @@ namespace DemoHotelBooking.Models
 
             builder.Entity<Invoice>()
                 .HasOne(i => i.Booking)
-                .WithMany()
-                .HasForeignKey(i => i.BookingId);
-            /*
+                .WithOne()
+                .HasForeignKey<Invoice>(i => i.BookingId);
+
             builder.Entity<Invoice>()
-                .HasOne(i => i.User)
-                .WithMany()
-                .HasForeignKey(i => i.CusId)
-                .OnDelete(DeleteBehavior.NoAction);
-               */
+                .HasOne(i => i.Receptionist)
+                .WithOne()
+                .HasForeignKey<Invoice>(i => i.ReceptionistId);
 
             builder.Entity<InvoiceDetail>()
                 .HasOne(i => i.Invoice)
@@ -69,9 +69,24 @@ namespace DemoHotelBooking.Models
                 .HasForeignKey(i => i.RoomId);
 
             builder.Entity<Feedback>()
-           .HasOne(f => f.User)
-           .WithOne()
-           .HasForeignKey<Feedback>(f => f.CusId);
+                .HasOne(f => f.User)
+                .WithOne()
+                .HasForeignKey<Feedback>(f => f.CusId);
+
+            builder.Entity<RoomImage>()
+                .HasOne(i => i.Room)
+                .WithMany()
+                .HasForeignKey(i => i.RoomId);
+
+            builder.Entity<ReportRevenue>()
+                .HasOne(i => i.Accountant)
+                .WithMany()
+                .HasForeignKey(i => i.AccId);
+
+            builder.Entity<ReportDetail>()
+                .HasOne(i=>i.ReportRevenue)
+                .WithMany()
+                .HasForeignKey (i => i.ReportId);
         }
     }
 }

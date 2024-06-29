@@ -30,12 +30,10 @@ namespace DemoHotelBooking.Areas.Admin.Controllers
                     room.Name = model.Name;
                     room.Type = model.Type;
                     room.FloorNumber = model.FloorNumber;
-                    room.ImagePath = model.ImagePath;
                     room.Introduce = model.Introduce;
                     room.Description = model.Description;
                     room.MAP = model.MAP;
                     room.DAP = model.DAP;
-                    room.Visio = model.Visio;
                     room.Price = model.Price;
                     _context.Rooms.Add(room);
                     await _context.SaveChangesAsync();
@@ -69,12 +67,10 @@ namespace DemoHotelBooking.Areas.Admin.Controllers
                     room.Name = model.Name;
                     room.Type = model.Type;
                     room.FloorNumber = model.FloorNumber;
-                    room.ImagePath = model.ImagePath;
                     room.Introduce= model.Introduce;
                     room.Description = model.Description;
                     room.MAP = model.MAP;
                     room.DAP = model.DAP;
-                    room.Visio = model.Visio;
                     room.Price = model.Price;
                     _context.Rooms.Update(room);
                     await _context.SaveChangesAsync();

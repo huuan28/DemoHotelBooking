@@ -4,9 +4,6 @@ namespace DemoHotelBooking.Models
 {
     public class InvoiceDetail
     {
-        [Key]
-        public int Id { get; set; }
-
         public int InvoiceId { get; set; }
         public Invoice Invoice { get; set; }
 
@@ -15,8 +12,7 @@ namespace DemoHotelBooking.Models
 
         public DateTime CheckoutDate { get; set; }
         public double Price { get; set; }
-        public int PeopleNumber { get; set; } //số người
-        public int SurchageRate { get; set; } //tỷ lệ phụ thu
-        public string Note { get; set; }
+
+        public int SubFee { get; set; } //tỷ lệ phụ thu
     }
 }

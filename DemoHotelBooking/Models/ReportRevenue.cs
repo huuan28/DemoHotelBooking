@@ -2,12 +2,13 @@
 
 namespace DemoHotelBooking.Models
 {
-    public class Revenue
+    public class ReportRevenue
     {
         [Key]
         public int Id { get; set; }
-        public int Month { get; set; }
-        public int Year { get; set; }
+        public DateTime Date { get; set; }
         public double Total { get; set; }
+        public string AccId { get; set; }
+        public AppUser Accountant { get; set; }
     }
 }

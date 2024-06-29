@@ -57,6 +57,7 @@ namespace DemoHotelBooking.Controllers
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+
             return View(model);
         }
         public IActionResult Login()
@@ -71,11 +72,6 @@ namespace DemoHotelBooking.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.FindByNameAsync(model.UserName);
-                    if (await _userManager.IsInRoleAsync(user, "Admin"))
-                        return RedirectToAction("AllRoomList", "RoomManager", new { area = "Admin" });
-                    if(await _userManager.IsInRoleAsync(user, "Receptionist"))
-                        return RedirectToAction("Index", "Room", new { area = "Receptionist" });
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");

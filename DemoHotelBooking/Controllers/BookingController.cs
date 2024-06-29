@@ -225,9 +225,8 @@ namespace DemoHotelBooking.Controllers
                 CheckinDate = currentBooking.CheckinDate,
                 CheckoutDate = currentBooking.CheckoutDate,
                 Deposit = (double)currentBooking.Deposit,
-                Amount = currentBooking.Amount,
                 CusID = user.Id,
-                Status = (int?)BookingState.Deposited
+                Status = 1
             };
             //lưu vào DB
             _context.Bookings.Add(booking);

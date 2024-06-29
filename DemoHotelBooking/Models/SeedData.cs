@@ -28,7 +28,7 @@ namespace DemoHotelBooking.Models
             // Tạo tài khoản admin mặc định nếu chưa tồn tại
             if (userManager.Users.All(u => u.UserName != "admin"))
             {
-                var admin = new AppUser { UserName = "admin", Email = "admin@example.com" };
+                var admin = new AppUser { UserName = "admin", Email = "admin@example.com", FullName="Quản trị viên", PhoneNumber = "0123456789" };
                 var result = await userManager.CreateAsync(admin, "admin");
 
                 if (result.Succeeded)
@@ -47,7 +47,7 @@ namespace DemoHotelBooking.Models
              };
             if (userManager.Users.All(u => u.UserName != "letan"))
             {
-                var user = new AppUser { UserName = "letan" };
+                var user = new AppUser { UserName = "letan", FullName="Lễ tân", PhoneNumber="0987654321", Email = "letan@example.com" };
                 var result = await userManager.CreateAsync(user, "123123");
                 if (result.Succeeded)
                 {
@@ -56,7 +56,7 @@ namespace DemoHotelBooking.Models
             }
             if (userManager.Users.All(u => u.UserName != "ketoan"))
             {
-                var user = new AppUser { UserName = "ketoan" };
+                var user = new AppUser { UserName = "ketoan", FullName="Kế toán", PhoneNumber="0123654789", Email = "ketoan@example.com" };
                 var result = await userManager.CreateAsync(user, "123123");
                 if (result.Succeeded)
                 {
@@ -86,18 +86,17 @@ namespace DemoHotelBooking.Models
             if (!context.Rooms.Any())
             {
                 context.AddRange(
-                                 new Room
-                                 {
-                                     Name = "STD101",
-                                     Type = "Standard",
-                                     FloorNumber = 1,
-                                     Price = 500000,
-                                     Introduce = "Phòng tiêu chuẩn với giường đơn.",
-                                     Description = "Phòng tiêu chuẩn với một giường đơn, phòng tắm riêng và view núi.",
-                                     Visio = "View núi",
-                                     DAP = 1,
-                                     MAP = 2
-                                 },
+                new Room
+                {
+                    Name = "STD101",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 500000,
+                    Introduce = "Phòng tiêu chuẩn với giường đơn.",
+                    Description = "Phòng tiêu chuẩn với một giường đơn, phòng tắm riêng và view núi.",
+                    DAP = 1,
+                    MAP = 2
+                },
                 new Room
                 {
                     Name = "STD102",
@@ -106,7 +105,6 @@ namespace DemoHotelBooking.Models
                     Price = 550000,
                     Introduce = "Phòng tiêu chuẩn với giường đôi.",
                     Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
-                    Visio = "View biển",
                     DAP = 2,
                     MAP = 2
                 },
@@ -118,7 +116,6 @@ namespace DemoHotelBooking.Models
                     Price = 700000,
                     Introduce = "Phòng superior với giường đôi và tiện nghi hiện đại.",
                     Description = "Phòng superior với một giường đôi lớn, phòng tắm rộng rãi và view biển.",
-                    Visio = "View biển",
                     DAP = 2,
                     MAP = 3
                 },
@@ -130,7 +127,6 @@ namespace DemoHotelBooking.Models
                     Price = 750000,
                     Introduce = "Phòng superior với giường đôi và view núi.",
                     Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
-                    Visio = "View núi",
                     DAP = 2,
                     MAP = 3
                 },
@@ -142,7 +138,6 @@ namespace DemoHotelBooking.Models
                     Price = 1000000,
                     Introduce = "Phòng deluxe với giường đôi và view biển.",
                     Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view biển.",
-                    Visio = "View biển",
                     DAP = 2,
                     MAP = 4
                 },
@@ -154,7 +149,6 @@ namespace DemoHotelBooking.Models
                     Price = 1000000,
                     Introduce = "Phòng deluxe với giường đôi và view núi.",
                     Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
-                    Visio = "View núi",
                     DAP = 2,
                     MAP = 4
                 },
@@ -166,7 +160,6 @@ namespace DemoHotelBooking.Models
                     Price = 1200000,
                     Introduce = "Phòng suite với phòng khách riêng và view biển.",
                     Description = "Phòng suite với một giường đôi lớn, phòng tắm riêng, phòng khách và ban công view biển.",
-                    Visio = "View biển",
                     DAP = 2,
                     MAP = 5
                 },
@@ -178,7 +171,6 @@ namespace DemoHotelBooking.Models
                     Price = 1250000,
                     Introduce = "Phòng suite với phòng khách riêng và view núi.",
                     Description = "Phòng suite với một giường đôi lớn, phòng tắm riêng, phòng khách và ban công view núi.",
-                    Visio = "View núi",
                     DAP = 2,
                     MAP = 5
                 },
@@ -190,7 +182,6 @@ namespace DemoHotelBooking.Models
                     Price = 1400000,
                     Introduce = "Phòng family với hai giường đôi.",
                     Description = "Phòng family với hai giường đôi, phòng tắm riêng và ban công rộng view biển.",
-                    Visio = "View biển",
                     DAP = 4,
                     MAP = 6
                 },
@@ -200,10 +191,8 @@ namespace DemoHotelBooking.Models
                     Type = "Family",
                     FloorNumber = 5,
                     Price = 1450000,
-                    ImagePath = "/images/room10.jpg",
                     Introduce = "Phòng family với hai giường đôi và view núi.",
                     Description = "Phòng family với hai giường đôi, phòng tắm riêng và ban công rộng view núi.",
-                    Visio = "View núi",
                     DAP = 4,
                     MAP = 6
                 }
