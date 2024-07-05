@@ -34,7 +34,7 @@ namespace DemoHotelBooking.Controllers
             var bookingJson = HttpContext.Session.GetString("CurrentBooking");
             if (string.IsNullOrEmpty(bookingJson))
             {
-                return new BookingViewModel();
+                return new BookingViewModel { CheckinDate=DateTime.Now};
             }
             return JsonConvert.DeserializeObject<BookingViewModel>(bookingJson);
         }
@@ -57,7 +57,11 @@ namespace DemoHotelBooking.Controllers
                 currentBooking.Phone = currentUser.PhoneNumber;
                 currentBooking.Name = currentUser.FullName;
             }
-
+            if (id != null)
+            {
+                var room = _context.Rooms.FirstOrDefault(r => r.Id == id);
+                currentBooking.SelectedRooms.Add(room);
+            }
             ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
             ViewData["bookingRooms"] = currentBooking.SelectedRooms;
             SaveBookingToSession(currentBooking);
@@ -74,7 +78,8 @@ namespace DemoHotelBooking.Controllers
                 //Kiểm tra đã đăng ký chưa
                 if (user == null)
                 {
-                    CreateUnRegisterUser(model.Phone, model.Name); //lưu tài khoản loại chưa đăng ký
+                    if (!await CreateUnRegisterUser(model.Phone, model.Name))
+                        return View(model); //lưu tài khoản loại chưa đăng ký
                     user = await _userManager.FindByNameAsync(model.Phone);
                 }
                 //if (!user.IsRegisted)
@@ -186,19 +191,12 @@ namespace DemoHotelBooking.Controllers
             var result = await _userManager.CreateAsync(user, "Abcd@1234");
             if (result.Succeeded)
             {
-                // Kiểm tra và tạo vai trò "Customer" nếu chưa có
-                if (!await _roleManager.RoleExistsAsync("Customer"))
-                {
-                    var role = new IdentityRole("Customer");
-                    await _roleManager.CreateAsync(role);
-                }
-
                 // Gán vai trò "Customer" cho người dùng
                 await _userManager.AddToRoleAsync(user, "Customer");
 
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                return true;
             }
-            return true;
+            return false;
         }
 
 
@@ -246,7 +244,7 @@ namespace DemoHotelBooking.Controllers
             }
             //xóa viewmodel
             HttpContext.Session.Remove("currentBooking");
-            
+
             return RedirectToAction("PaymentSuccess");
         }
         public IActionResult PaymentSuccess()
