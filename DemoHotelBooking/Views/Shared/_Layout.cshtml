@@ -34,15 +34,30 @@
     <style>
         .login-popup {
             position: fixed;
-            top: 0;
+            top: -100%; /* Đẩy popup lên trên ngoài màn hình ban đầu */
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Điều chỉnh các phần tử vào đầu của popup */
             z-index: 999;
+            transition: top 0.3s ease; /* Thêm hiệu ứng chuyển động */
+        }
+
+        .register-popup {
+            position: fixed;
+            top: -100%; /* Đẩy popup lên trên ngoài màn hình ban đầu */
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Điều chỉnh các phần tử vào đầu của popup */
+            z-index: 999;
+            transition: top 0.3s ease; /* Thêm hiệu ứng chuyển động */
         }
 
         .login-content {
@@ -52,14 +67,89 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
             max-width: 400px;
             width: 90%;
+            transition: transform 0.3s ease; /* Thêm hiệu ứng chuyển động */
+            transform: translateY(-100%); /* Đẩy nội dung lên trên */
         }
 
-        .hidden {
-            display: none;
+        .login-popup.active {
+            top: 0; /* Hiển thị popup khi được kích hoạt */
         }
 
+        .register-popup.active {
+            top: 0; /* Hiển thị popup khi được kích hoạt */
+        }
 
+        .login-content.active {
+            transform: translateY(0); /* Hiển thị nội dung từ trên xuống */
+        }
 
+        #loginForm {
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.8);
+            flex-grow: 1;
+            padding: 30px 30px 40px;
+            box-shadow: 0px 0px 17px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        #wrapper {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-heading {
+            font-size: 25px;
+            color: #f5f5f5;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            border-bottom: 1px solid #fff;
+            margin-top: 15px;
+            margin-bottom: 20px;
+            display: flex;
+        }
+
+            .form-group i {
+                color: #fff;
+                font-size: 14px;
+                padding-top: 5px;
+                padding-right: 10px;
+            }
+
+        .form-input {
+            background: transparent;
+            border: 0;
+            outline: 0;
+            color: #f5f5f5;
+            flex-grow: 1;
+        }
+
+            .form-input::placeholder {
+                color: #f5f5f5;
+            }
+
+        #eye i {
+            padding-right: 0;
+            cursor: pointer;
+        }
+
+        .form-submit {
+            background: transparent;
+            border: 1px solid #f5f5f5;
+            color: #fff;
+            width: 100%;
+            text-transform: uppercase;
+            padding: 6px 10px;
+            transition: 0.25s ease-in-out;
+            margin-top: 30px;
+        }
+
+            .form-submit:hover {
+                border: 1px solid #54a0ff;
+            }
     </style>
 </head>
 
@@ -105,7 +195,7 @@
                             else
                             {
                                 <div class="h-100 d-inline-flex align-items-center py-2 me-4">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Đăng ký</a>
+                                    <a class="register-btn">Đăng ký</a>
                                 </div>
                                 <div class="h-100 d-inline-flex align-items-center py-2">
                                     @* <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Đăng nhập</a> *@
@@ -146,63 +236,55 @@
         <!-- Header End -->
         <!-- Carousel Start -->
 
-        <div class="container-fluid booking pb-5 wow fadeIn" data-wow-delay="0.1s" style="visibility: visible; animation-delay: 0.1s; animation-name: fadeIn;">
-            <div class="container">
-                <div hidden class="bg-white shadow" style="padding: 35px;">
-                    <div class="row g-2">
-                        <div class="col-md-10">
-                            <div class="row g-2">
-                                <div class="col-md-3">
-                                    <div class="date" id="date1" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" placeholder="Check in" data-target="#date1" data-toggle="datetimepicker">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="date" id="date2" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" placeholder="Check out" data-target="#date2" data-toggle="datetimepicker">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <select class="form-select">
-                                        <option selected="">Adult</option>
-                                        <option value="1">Adult 1</option>
-                                        <option value="2">Adult 2</option>
-                                        <option value="3">Adult 3</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <select class="form-select">
-                                        <option selected="">Child</option>
-                                        <option value="1">Child 1</option>
-                                        <option value="2">Child 2</option>
-                                        <option value="3">Child 3</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary w-100">Submit</button>
-                        </div>
+        <div class="register-popup hidden" id="wrapper">
+            <form asp-action="Register" asp-controller="Account" id="loginForm">
+                <h1 class="form-heading">Form đăng ký</h1>
+                <div class="form-group">
+                    <i class="fas fa-phone"></i>
+                    <input name="PhoneNumber" type="text" class="form-input" placeholder="Số điện thoại">
+                </div>
+                <div class="form-group">
+                    <i class="far fa-user"></i>
+                    <input name="FullName" type="text" class="form-input" placeholder="Họ và tên">
+                </div>
+                <div class="form-group">
+                    <i class="far fa-envelope"></i>
+                    <input name="Email" type="text" class="form-input" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-key"></i>
+                    <input name="Password" type="password" class="form-input" placeholder="Mật khẩu">
+                    <div id="eye">
+                        <i class="far fa-eye"></i>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="login-popup hidden">
-            <div class="login-content">
-                <form asp-action="Login" asp-controller="Account" method="post" id="loginForm">
-                    <div class="form-group">        
-                        <input name="UserName" class="form-control" />
+                <div class="form-group">
+                    <i class="fas fa-key"></i>
+                    <input name="ConfirmPassword" type="password" class="form-input" placeholder="Nhập Lại Mật khẩu">
+                    <div id="eye">
+                        <i class="far fa-eye"></i>
                     </div>
-                    <div class="form-group">
-                        <input name="Password" class="form-control" />
-                    </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-            </div>
+                </div>
+                <button type="submit" class="btn btn-primary form-submit">Register</button>
+            </form>
         </div>
-
-
-
+        <div class="login-popup hidden" id="wrapper">
+            <form asp-action="Login" asp-controller="Account" id="loginForm">
+                <h1 class="form-heading">Form đăng nhập</h1>
+                <div class="form-group">
+                    <i class="far fa-user"></i>
+                    <input name="UserName" type="text" class="form-input" placeholder="Tên đăng nhập">
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-key"></i>
+                    <input name="Password" type="password" class="form-input" placeholder="Mật khẩu">
+                    <div id="eye">
+                        <i class="far fa-eye"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary form-submit">Login</button>
+            </form>
+        </div>
         <div id="main" class="container-xxl py-5">
             @RenderBody()
         </div>
@@ -309,20 +391,37 @@
 
     <!-- Template Javascript -->
     <script src="~/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
     <script>
+        const registerBtn = document.querySelector('.register-btn');
+        const registerPopup = document.querySelector('.register-popup');
+        const registerContent = document.querySelector('.register-content');
         const loginBtn = document.querySelector('.login-btn');
         const loginPopup = document.querySelector('.login-popup');
         const closeBtn = document.querySelector('.close-btn');
+        const loginContent = document.querySelector('.login-content');
+
+        registerBtn.addEventListener('click', () => {
+            registerPopup.classList.add('active'); // Thêm lớp active để hiển thị popup
+            setTimeout(() => {
+                registerContent.classList.add('active'); // Hiển thị nội dung từ trên xuống sau một chút
+            }, 50); // Đợi một chút để hiển thị hiệu ứng tốt hơn
+        });
 
         loginBtn.addEventListener('click', () => {
-            loginPopup.classList.remove('hidden');
+            loginPopup.classList.add('active'); // Thêm lớp active để hiển thị popup
+            setTimeout(() => {
+                loginContent.classList.add('active'); // Hiển thị nội dung từ trên xuống sau một chút
+            }, 50); // Đợi một chút để hiển thị hiệu ứng tốt hơn
         });
 
         closeBtn.addEventListener('click', () => {
-            loginPopup.classList.add('hidden');
+            loginContent.classList.remove('active'); // Ẩn nội dung trước
+            setTimeout(() => {
+                loginPopup.classList.remove('active'); // Ẩn popup sau khi nội dung được ẩn
+            }, 300); // Thời gian của hiệu ứng ẩn
         });
     </script>
-        @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 
