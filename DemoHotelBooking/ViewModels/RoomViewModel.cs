@@ -4,7 +4,7 @@ namespace DemoHotelBooking.ViewModels
 {
     public class RoomViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Display(Name = "Mã phòng")]
         public string Name { get; set; } //mã phòng (STD..., SUP..., DLX..., SUT) 
@@ -37,5 +37,20 @@ namespace DemoHotelBooking.ViewModels
         [Required]
         [Display(Name = "Số người tối đa")]
         public int MAP { get; set; } // Maximum Amount of people (Số người tối đa)
+
+        public string? Status {  get; set; }
+        public string? StatusColor
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case "Đã đặt": return "#FCE300";
+                    case "Bảo trì": return "707577";
+                    case "Đang thuê": return "DD3736";
+                    default: return "#00A3FC";
+                }
+            }
+        }
     }
 }
