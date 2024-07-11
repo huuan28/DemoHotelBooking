@@ -79,7 +79,7 @@ namespace DemoHotelBooking.Controllers
                 if (user == null)
                 {
                     if (!await CreateUnRegisterUser(model.Phone, model.Name))
-                        return View(model); //lưu tài khoản loại chưa đăng ký
+                        return View(currentBooking); //lưu tài khoản loại chưa đăng ký
                     user = await _userManager.FindByNameAsync(model.Phone);
                 }
                 //if (!user.IsRegisted)
@@ -88,6 +88,27 @@ namespace DemoHotelBooking.Controllers
                 //    _context.Users.Add(user);
                 //}
                 currentBooking = GetBookingFromSession();
+                if (currentBooking.SelectedRooms.Count == 0)
+                {
+                    ViewBag.Error = "Chưa chọn phòng!!!";
+                    ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+                    ViewData["bookingRooms"] = currentBooking.SelectedRooms;
+                    return View(model);
+                }
+                if (model.CheckinDate < DateTime.Now || model.CheckoutDate < DateTime.Now)
+                {
+                    ViewBag.Error = "Không thể nhận/trả phòng ở thời điểm này!!!";
+                    ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+                    ViewData["bookingRooms"] = currentBooking.SelectedRooms;
+                    return View(model);
+                }
+                if (model.CheckinDate >= model.CheckoutDate||model.CheckoutDate.Day-model.CheckinDate.Day<1)
+                {
+                    ViewBag.Error = "Cần đặt ít nhất 1 ngày!!!";
+                    ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
+                    ViewData["bookingRooms"] = currentBooking.SelectedRooms;
+                    return View(model);
+                }
                 currentBooking.CheckinDate = model.CheckinDate;
                 currentBooking.CheckinDate = model.CheckinDate;
                 currentBooking.Name = model.Name;
@@ -104,7 +125,7 @@ namespace DemoHotelBooking.Controllers
                     FullName = model.Name,
                     BookingId = new Random().Next(1, 1000)
                 };
-                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel,""));
+                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel,"a"));
             }
             ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
             ViewData["bookingRooms"] = currentBooking.SelectedRooms;
@@ -243,7 +264,7 @@ namespace DemoHotelBooking.Controllers
                 await _context.SaveChangesAsync();
             }
             //xóa viewmodel
-            HttpContext.Session.Remove("currentBooking");
+            HttpContext.Session.Remove("CurrentBooking");
 
             return RedirectToAction("PaymentSuccess");
         }

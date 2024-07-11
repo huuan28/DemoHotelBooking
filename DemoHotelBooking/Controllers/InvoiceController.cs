@@ -21,14 +21,23 @@ namespace DemoHotelBooking.Controllers
             _userManager = userManager;
             _vnPayService = vnPayService;
         }
+        //ds datphong
         public IActionResult BookingList()
         {
-            var list = _context.Bookings.ToList();
+            //var list = _context.Bookings.ToList();
+            var list = _context.Bookings
+                .Include(i=>i.Customer)
+                .ToList();
+            var models = new List<BookingView>();
             foreach (var i in list)
             {
-                i.Customer = _context.Users.Find(i.CusID);
+                //i.Customer = _context.Users.Find(i.CusID);
+                models.Add(new BookingView
+                {
+                    Booking = i
+                });
             }
-            return View(list);
+            return View(models);
         }
         public IActionResult BookingDetails(int id)
         {
@@ -303,9 +312,7 @@ namespace DemoHotelBooking.Controllers
                 InvoiceDetail = invoiceDetails,
                 SubFee =sf,
                 Final = invoiceDetails.Sum(d => d.Price + d.SubFee)
-            };
-            
-
+            };      
             return View("Print", viewModel);
         }
     }

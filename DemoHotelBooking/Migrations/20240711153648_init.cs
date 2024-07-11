@@ -348,7 +348,7 @@ namespace DemoHotelBooking.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InvoiceDetail",
+                name: "InvoiceDetails",
                 columns: table => new
                 {
                     InvoiceId = table.Column<int>(type: "int", nullable: false),
@@ -358,15 +358,15 @@ namespace DemoHotelBooking.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_InvoiceDetail", x => new { x.InvoiceId, x.RoomId });
+                    table.PrimaryKey("PK_InvoiceDetails", x => new { x.InvoiceId, x.RoomId });
                     table.ForeignKey(
-                        name: "FK_InvoiceDetail_Invoices_InvoiceId",
+                        name: "FK_InvoiceDetails_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalTable: "Invoices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_InvoiceDetail_Rooms_RoomId",
+                        name: "FK_InvoiceDetails_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -399,8 +399,8 @@ namespace DemoHotelBooking.Migrations
                 column: "CusID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InvoiceDetail_RoomId",
-                table: "InvoiceDetail",
+                name: "IX_InvoiceDetails_RoomId",
+                table: "InvoiceDetails",
                 column: "RoomId");
 
             migrationBuilder.CreateIndex(
@@ -412,8 +412,7 @@ namespace DemoHotelBooking.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Invoices_ReceptionistId",
                 table: "Invoices",
-                column: "ReceptionistId",
-                unique: true);
+                column: "ReceptionistId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReportDetails_RoomId",
@@ -476,7 +475,7 @@ namespace DemoHotelBooking.Migrations
                 name: "Feedbacks");
 
             migrationBuilder.DropTable(
-                name: "InvoiceDetail");
+                name: "InvoiceDetails");
 
             migrationBuilder.DropTable(
                 name: "ReportDetails");

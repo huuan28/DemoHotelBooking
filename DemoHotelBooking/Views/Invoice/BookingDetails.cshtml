@@ -5,10 +5,9 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>BookingDetails</h1>
+<h1>Chi tiết đặt phòng</h1>
 <div>
-    <h4>Booking</h4>
-<a asp-action="checkin" asp-controller="invoice" asp-route-id="@Model?.Id">Checkin</a>
+<a class="btn btn-primary" asp-action="checkin" asp-controller="invoice" asp-route-id="@Model?.Id">Checkin</a>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -56,6 +55,5 @@
     </dl>
 </div>
 <div>
-
-    <a asp-action="Index">Back to List</a>
+    <a class="text-warning" asp-action="Index">Quay lại</a>
 </div>

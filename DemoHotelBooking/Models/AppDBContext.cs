@@ -56,8 +56,8 @@ namespace DemoHotelBooking.Models
 
             builder.Entity<Invoice>()
                 .HasOne(i => i.Receptionist)
-                .WithOne()
-                .HasForeignKey<Invoice>(i => i.ReceptionistId);
+                .WithMany()
+                .HasForeignKey(i => i.ReceptionistId);
 
             builder.Entity<InvoiceDetail>()
                 .HasOne(i => i.Invoice)

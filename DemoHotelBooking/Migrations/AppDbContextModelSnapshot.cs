@@ -220,8 +220,7 @@ namespace DemoHotelBooking.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.HasIndex("ReceptionistId")
-                        .IsUnique();
+                    b.HasIndex("ReceptionistId");
 
                     b.ToTable("Invoices");
                 });
@@ -528,8 +527,8 @@ namespace DemoHotelBooking.Migrations
                         .IsRequired();
 
                     b.HasOne("DemoHotelBooking.Models.AppUser", "Receptionist")
-                        .WithOne()
-                        .HasForeignKey("DemoHotelBooking.Models.Invoice", "ReceptionistId")
+                        .WithMany()
+                        .HasForeignKey("ReceptionistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

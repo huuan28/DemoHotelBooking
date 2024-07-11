@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoHotelBooking.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240710093448_init")]
+    [Migration("20240711153648_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -222,8 +222,7 @@ namespace DemoHotelBooking.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.HasIndex("ReceptionistId")
-                        .IsUnique();
+                    b.HasIndex("ReceptionistId");
 
                     b.ToTable("Invoices");
                 });
@@ -246,7 +245,7 @@ namespace DemoHotelBooking.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("InvoiceDetail");
+                    b.ToTable("InvoiceDetails");
                 });
 
             modelBuilder.Entity("DemoHotelBooking.Models.ReportDetail", b =>
@@ -530,8 +529,8 @@ namespace DemoHotelBooking.Migrations
                         .IsRequired();
 
                     b.HasOne("DemoHotelBooking.Models.AppUser", "Receptionist")
-                        .WithOne()
-                        .HasForeignKey("DemoHotelBooking.Models.Invoice", "ReceptionistId")
+                        .WithMany()
+                        .HasForeignKey("ReceptionistId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
