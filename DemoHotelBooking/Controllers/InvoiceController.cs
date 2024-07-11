@@ -39,10 +39,17 @@ namespace DemoHotelBooking.Controllers
             }
             return View(models);
         }
+        //chi tiet datphong
         public IActionResult BookingDetails(int id)
         {
             var bkdt = _context.Bookings.Find(id);
-            return View(bkdt);
+            var dt = _context.BookingDetails.Where(i => i.BookingId == id).Include(i => i.Room).ToList();
+            var model = new BookingView
+            {
+                Booking = bkdt,
+                Rooms = dt
+            };
+            return View(model);
         }
         public async Task<IActionResult> Checkin(int id)
         {
@@ -53,6 +60,8 @@ namespace DemoHotelBooking.Controllers
             var inv = _context.Invoices.FirstOrDefault(i => i.BookingId == id);
             if (inv != null) return NotFound();
             var Receptionist = await _userManager.GetUserAsync(HttpContext.User);
+            if(Receptionist==null)
+                return RedirectToAction("Login","Account");
             var bkdt = _context.BookingDetails.Where(i => i.BookingId == id).ToList();
             TimeSpan stayDuration = bk.CheckoutDate - bk.CheckinDate;
             int numberOfDays = stayDuration.Days;

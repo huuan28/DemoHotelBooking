@@ -31,10 +31,10 @@
     <hr />
     @if (Model.Invoice.Status == 1)
     {
-        <a class="btn btn-Danger" asp-action="Checkout" asp-route-id="@Model.Invoice.Id">Trả phòng</a>
+        <a class="btn btn-danger" asp-action="Checkout" asp-route-id="@Model.Invoice.Id">Trả phòng</a>
     }
     <hr/>
-    <a class="btn btn-Success" asp-action="Print" asp-route-id="@Model.Invoice.Id" target="_blank">In phiếu</a>
+    <a class="btn btn-success" asp-action="Print" asp-route-id="@Model.Invoice.Id" target="_blank">In phiếu</a>
     <dl class="row">
         <dt class="col-sm-2">
             Khách hàng

@@ -5,6 +5,7 @@ namespace DemoHotelBooking.ViewModels
     public class BookingView
     {
         public Booking Booking { get; set; }
+        public List<BookingDetail>? Rooms { get; set; }
         public string Status
         {
             get
@@ -33,5 +34,6 @@ namespace DemoHotelBooking.ViewModels
                 }
             }
         }
+
     }
 }
