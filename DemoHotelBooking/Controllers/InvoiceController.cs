@@ -319,9 +319,9 @@ namespace DemoHotelBooking.Controllers
             {
                 Invoice = invoice,
                 InvoiceDetail = invoiceDetails,
-                SubFee =sf,
-                Final = invoiceDetails.Sum(d => d.Price + d.SubFee)
-            };      
+                SubFee = sf
+            };
+            viewModel.Final = viewModel.Invoice.Amount - viewModel.Invoice.Booking.Deposit + invoiceDetails.Sum(d => d.Price* d.SubFee/100);
             return View("Print", viewModel);
         }
     }

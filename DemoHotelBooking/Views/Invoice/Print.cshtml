@@ -26,6 +26,11 @@
             <dd class="col-sm-10">@string.Format("{0:#,0} VNĐ", Model.SubFee)</dd>
             <dt class="col-sm-2">Tổng chi phí:</dt>
             <dd class="col-sm-10">@string.Format("{0:#,0} VNĐ", Model.Invoice.Amount)</dd>
+            @if (Model.Invoice.Status == 3)
+            {
+                <dt class="col-sm-2">Còn lại:</dt>
+                <dd class="col-sm-10">@string.Format("{0:#,0} VNĐ", Model.Final)</dd>
+            }
             <dt class="col-sm-2">Trạng thái:</dt>
             <dd class="col-sm-10">@Model.Status</dd>
             @if (Model.Invoice.Status == 3)
