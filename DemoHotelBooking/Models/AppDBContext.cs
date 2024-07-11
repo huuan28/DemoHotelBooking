@@ -12,6 +12,7 @@ namespace DemoHotelBooking.Models
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<BookingDetail> BookingDetails { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
         public DbSet<ReportRevenue> ReportRevenues { get; set; }
         public DbSet<ReportDetail> ReportDetails { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }

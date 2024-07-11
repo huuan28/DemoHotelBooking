@@ -10,7 +10,6 @@ namespace DemoHotelBooking.Models
         public int RoomId { get; set; }
         public Room Room { get; set; }
 
-        public DateTime CheckoutDate { get; set; }
         public double Price { get; set; }
 
         public int SubFee { get; set; } //tỷ lệ phụ thu

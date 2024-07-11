@@ -28,7 +28,7 @@ namespace DemoHotelBooking.Models
             // Tạo tài khoản admin mặc định nếu chưa tồn tại
             if (userManager.Users.All(u => u.UserName != "admin"))
             {
-                var admin = new AppUser { UserName = "admin", Email = "admin@example.com", FullName="Quản trị viên", PhoneNumber = "0123456789" };
+                var admin = new AppUser { UserName = "admin", Email = "admin@example.com", FullName = "Quản trị viên", PhoneNumber = "0123456789" };
                 var result = await userManager.CreateAsync(admin, "admin");
 
                 if (result.Succeeded)
@@ -40,14 +40,14 @@ namespace DemoHotelBooking.Models
             // Danh sách các khách hàng cần thêm
             var customers = new List<AppUser>
             {
-                 new AppUser { UserName = "an",FullName = "An", Email = "customer1@example.com" },
+                 new AppUser { UserName = "an",FullName = "An", Email = "customer1@example.com", PhoneNumber="0933912012" },
                  new AppUser { UserName = "hao",FullName = "Hào", Email = "customer2@example.com" },
                  new AppUser { UserName = "manh",FullName = "Mạnh", Email = "customer3@example.com" },
                  new AppUser { UserName = "tuan",FullName = "Tuấn", Email = "customer5@example.com" },
              };
             if (userManager.Users.All(u => u.UserName != "letan"))
             {
-                var user = new AppUser { UserName = "letan", FullName="Lễ tân", PhoneNumber="0987654321", Email = "letan@example.com" };
+                var user = new AppUser { UserName = "letan", FullName = "Lễ tân", PhoneNumber = "0987654321", Email = "letan@example.com" };
                 var result = await userManager.CreateAsync(user, "123123");
                 if (result.Succeeded)
                 {
@@ -56,7 +56,7 @@ namespace DemoHotelBooking.Models
             }
             if (userManager.Users.All(u => u.UserName != "ketoan"))
             {
-                var user = new AppUser { UserName = "ketoan", FullName="Kế toán", PhoneNumber="0123654789", Email = "ketoan@example.com" };
+                var user = new AppUser { UserName = "ketoan", FullName = "Kế toán", PhoneNumber = "0123654789", Email = "ketoan@example.com" };
                 var result = await userManager.CreateAsync(user, "123123");
                 if (result.Succeeded)
                 {
@@ -108,6 +108,94 @@ namespace DemoHotelBooking.Models
                     DAP = 2,
                     MAP = 2
                 },
+                                new Room
+                                {
+                                    Name = "STD103",
+                                    Type = "Standard",
+                                    FloorNumber = 1,
+                                    Price = 550000,
+                                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                                    DAP = 2,
+                                    MAP = 2
+                                },
+                new Room
+                {
+                    Name = "STD104",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 550000,
+                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                    DAP = 2,
+                    MAP = 2
+                },
+                new Room
+                {
+                    Name = "STD105",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 550000,
+                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                    DAP = 2,
+                    MAP = 2
+                },
+                new Room
+                {
+                    Name = "STD106",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 550000,
+                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                    DAP = 2,
+                    MAP = 2
+                },
+                new Room
+                {
+                    Name = "STD107",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 550000,
+                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                    DAP = 2,
+                    MAP = 2
+                },
+                new Room
+                {
+                    Name = "STD108",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 550000,
+                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                    DAP = 2,
+                    MAP = 2
+                },
+                new Room
+                {
+                    Name = "STD109",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 550000,
+                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                    DAP = 2,
+                    MAP = 2
+                },
+                new Room
+                {
+                    Name = "STD110",
+                    Type = "Standard",
+                    FloorNumber = 1,
+                    Price = 550000,
+                    Introduce = "Phòng tiêu chuẩn với giường đôi.",
+                    Description = "Phòng tiêu chuẩn với một giường đôi, phòng tắm riêng và view biển.",
+                    DAP = 2,
+                    MAP = 2
+                },
                 new Room
                 {
                     Name = "SUP201",
@@ -122,6 +210,94 @@ namespace DemoHotelBooking.Models
                 new Room
                 {
                     Name = "SUP202",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 750000,
+                    Introduce = "Phòng superior với giường đôi và view núi.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP203",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 750000,
+                    Introduce = "Phòng superior với giường đôi và view núi.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP204",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 750000,
+                    Introduce = "Phòng superior với giường đôi và view núi.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP205",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 750000,
+                    Introduce = "Phòng superior với giường đôi và view núi.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP206",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 700000,
+                    Introduce = "Phòng superior với giường đôi và tiện nghi hiện đại.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm rộng rãi và view biển.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP207",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 750000,
+                    Introduce = "Phòng superior với giường đôi và view núi.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP208",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 750000,
+                    Introduce = "Phòng superior với giường đôi và view núi.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP209",
+                    Type = "Superior",
+                    FloorNumber = 2,
+                    Price = 750000,
+                    Introduce = "Phòng superior với giường đôi và view núi.",
+                    Description = "Phòng superior với một giường đôi lớn, phòng tắm riêng và view núi.",
+                    DAP = 2,
+                    MAP = 3
+                },
+                new Room
+                {
+                    Name = "SUP210",
                     Type = "Superior",
                     FloorNumber = 2,
                     Price = 750000,
@@ -154,6 +330,94 @@ namespace DemoHotelBooking.Models
                 },
                 new Room
                 {
+                    Name = "DLX303",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view núi.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
+                    Name = "DLX304",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view núi.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
+                    Name = "DLX305",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view núi.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
+                    Name = "DLX306",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view biển.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view biển.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
+                    Name = "DLX307",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view núi.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
+                    Name = "DLX308",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view núi.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
+                    Name = "DLX309",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view núi.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
+                    Name = "DLX310",
+                    Type = "Deluxe",
+                    FloorNumber = 3,
+                    Price = 1000000,
+                    Introduce = "Phòng deluxe với giường đôi và view núi.",
+                    Description = "Phòng deluxe với một giường đôi lớn, phòng tắm riêng và ban công rộng view núi.",
+                    DAP = 2,
+                    MAP = 4
+                },
+                new Room
+                {
                     Name = "SUT401",
                     Type = "Suite",
                     FloorNumber = 4,
@@ -176,25 +440,47 @@ namespace DemoHotelBooking.Models
                 },
                 new Room
                 {
-                    Name = "FAM501",
-                    Type = "Family",
-                    FloorNumber = 5,
-                    Price = 1400000,
-                    Introduce = "Phòng family với hai giường đôi.",
-                    Description = "Phòng family với hai giường đôi, phòng tắm riêng và ban công rộng view biển.",
-                    DAP = 4,
-                    MAP = 6
+                    Name = "SUT403",
+                    Type = "Suite",
+                    FloorNumber = 4,
+                    Price = 1200000,
+                    Introduce = "Phòng suite với phòng khách riêng và view biển.",
+                    Description = "Phòng suite với một giường đôi lớn, phòng tắm riêng, phòng khách và ban công view biển.",
+                    DAP = 2,
+                    MAP = 5
                 },
                 new Room
                 {
-                    Name = "FAM502",
-                    Type = "Family",
-                    FloorNumber = 5,
-                    Price = 1450000,
-                    Introduce = "Phòng family với hai giường đôi và view núi.",
-                    Description = "Phòng family với hai giường đôi, phòng tắm riêng và ban công rộng view núi.",
-                    DAP = 4,
-                    MAP = 6
+                    Name = "SUT404",
+                    Type = "Suite",
+                    FloorNumber = 4,
+                    Price = 1250000,
+                    Introduce = "Phòng suite với phòng khách riêng và view núi.",
+                    Description = "Phòng suite với một giường đôi lớn, phòng tắm riêng, phòng khách và ban công view núi.",
+                    DAP = 2,
+                    MAP = 5
+                },
+                new Room
+                {
+                    Name = "SUT405",
+                    Type = "Suite",
+                    FloorNumber = 4,
+                    Price = 1200000,
+                    Introduce = "Phòng suite với phòng khách riêng và view biển.",
+                    Description = "Phòng suite với một giường đôi lớn, phòng tắm riêng, phòng khách và ban công view biển.",
+                    DAP = 2,
+                    MAP = 5
+                },
+                new Room
+                {
+                    Name = "SUT406",
+                    Type = "Suite",
+                    FloorNumber = 4,
+                    Price = 1250000,
+                    Introduce = "Phòng suite với phòng khách riêng và view núi.",
+                    Description = "Phòng suite với một giường đôi lớn, phòng tắm riêng, phòng khách và ban công view núi.",
+                    DAP = 2,
+                    MAP = 5
                 }
             );
                 context.SaveChanges();

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DemoHotelBooking.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240629161324_init")]
+    [Migration("20240710093448_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -235,9 +235,6 @@ namespace DemoHotelBooking.Migrations
 
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("CheckoutDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");

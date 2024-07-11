@@ -23,6 +23,8 @@ namespace DemoHotelBooking.ViewModels
 
         public List<Room> AvailbleRooms { get; set; }
 
+        public AppUser? Customer { get; set; }
+
         public BookingViewModel()
         {
             SelectedRooms = new List<Room>();

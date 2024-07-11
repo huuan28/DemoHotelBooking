@@ -94,6 +94,7 @@ namespace DemoHotelBooking.Controllers
                 currentBooking.Phone = model.Phone;
                 currentBooking.Deposit = currentBooking.SelectedRooms.Sum(i => i.Price) * 0.2 * numberOfDays;
                 currentBooking.Amount = currentBooking.SelectedRooms.Sum(i => i.Price) * numberOfDays;
+                currentBooking.Customer = user;
                 SaveBookingToSession(currentBooking);
                 var vnPayModel = new VnPaymentRequestModel()
                 {
@@ -103,7 +104,7 @@ namespace DemoHotelBooking.Controllers
                     FullName = model.Name,
                     BookingId = new Random().Next(1, 1000)
                 };
-                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
+                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel,""));
             }
             ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
             ViewData["bookingRooms"] = currentBooking.SelectedRooms;
@@ -215,7 +216,6 @@ namespace DemoHotelBooking.Controllers
             currentBooking = GetBookingFromSession();
 
             //lấy thông tin khách hàng
-            var user = await _userManager.FindByNameAsync(currentBooking.Phone);
             // tạo mới đơn đặt phòng
             var booking = new Booking
             {
@@ -223,7 +223,7 @@ namespace DemoHotelBooking.Controllers
                 CheckinDate = currentBooking.CheckinDate,
                 CheckoutDate = currentBooking.CheckoutDate,
                 Deposit = (double)currentBooking.Deposit,
-                CusID = user.Id,
+                CusID = currentBooking.Customer.Id,
                 Status = 1
             };
             //lưu vào DB

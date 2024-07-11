@@ -24,5 +24,10 @@ namespace DemoHotelBooking.Models
 
         public AppUser Receptionist { get; set; }
 
+        //0: moi tao
+        //1: da checkin
+        //2: da checkout
+        //3: da thanh toan
+
     }
 }

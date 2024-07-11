@@ -9,7 +9,6 @@ namespace DemoHotelBooking.ViewModels
         [Display(Name = "Mã phòng")]
         public string Name { get; set; } //mã phòng (STD..., SUP..., DLX..., SUT) 
 
-        [Required]
         [Display(Name = "Loại phòng")]
         public string Type { get; set; } //loại phòng (Standart, Superio, Deluxe, Suite)
 

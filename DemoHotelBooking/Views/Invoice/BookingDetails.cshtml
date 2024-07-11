@@ -6,9 +6,9 @@
 }
 
 <h1>BookingDetails</h1>
-
 <div>
     <h4>Booking</h4>
+<a asp-action="checkin" asp-controller="invoice" asp-route-id="@Model?.Id">Checkin</a>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -56,6 +56,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+
     <a asp-action="Index">Back to List</a>
 </div>
