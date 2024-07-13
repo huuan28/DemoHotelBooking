@@ -46,7 +46,7 @@
 
         <div class="d-flex align-items-center justify-content-between">
             <a href="index.html" class="logo d-flex align-items-center">
-                <img src="assets/img/logo.png" alt="">
+                @* <img src="assets/img/logo.png" alt=""> *@
                 <span class="d-none d-lg-block">HotelABC</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -317,7 +317,7 @@
                     </a>
                     <ul id="forms-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
                         <li>
-                            <a asp-action="bookinglist" asp-controller="invoice" asp-area="">
+                            <a asp-action="customerlist" asp-controller="account" asp-area="">
                                 <i class="bi bi-circle"></i><span>DS Khách hàng</span>
                             </a>
                         </li>
@@ -407,33 +407,38 @@
                 </li>
                 <!-- End Profile Page Nav -->
             }
-            <li class="nav-item">
-                <a class="nav-link collapsed" asp-action="bookinglist" asp-controller="invoice" asp-area="">
-                    <i class="bi bi-person"></i>
-                    <span>DS Đặt phòng</span>
-                </a>
-            </li><!-- End Profile Page Nav -->
+            @if (User.IsInRole("Receptionist"))
+            {
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" asp-action="invoiceList" asp-controller="invoice" asp-area="" asp-route-type="1">
-                    <i class="bi bi-question-circle"></i>
-                    <span>DS Phiếu nhận phòng</span>
-                </a>
-            </li><!-- End F.A.Q Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" asp-action="invoiceList" asp-controller="invoice" asp-area="" asp-route-type="2">
-                    <i class="bi bi-envelope"></i>
-                    <span>DS Phiếu trả phòng</span>
-                </a>
-            </li><!-- End Contact Page Nav -->
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-action="bookinglist" asp-controller="invoice" asp-area="">
+                        <i class="bi bi-person"></i>
+                        <span>DS Đặt phòng</span>
+                    </a>
+                </li><!-- End Profile Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" asp-action="invoiceList" asp-controller="invoice" asp-area="" asp-route-type="3">
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-action="invoiceList" asp-controller="invoice" asp-area="" asp-route-type="1">
+                        <i class="bi bi-question-circle"></i>
+                        <span>DS Phiếu nhận phòng</span>
+                    </a>
+                </li><!-- End F.A.Q Page Nav -->
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-action="invoiceList" asp-controller="invoice" asp-area="" asp-route-type="2">
+                        <i class="bi bi-envelope"></i>
+                        <span>DS Phiếu trả phòng</span>
+                    </a>
+                </li><!-- End Contact Page Nav -->
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed" asp-action="invoiceList" asp-controller="invoice" asp-area="" asp-route-type="3">
                     <i class="bi bi-card-list"></i>
                     <span>DS Hóa đơn</span>
                 </a>
-            </li><!-- End Register Page Nav -->
+            </li>
+            }<!-- End Register Page Nav -->
             @*  <li class="nav-item">
             <a class="nav-link collapsed" href="pages-login.html">
             <i class="bi bi-box-arrow-in-right"></i>

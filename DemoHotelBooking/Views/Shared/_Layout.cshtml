@@ -31,6 +31,7 @@
 
     <!-- Template Stylesheet -->
     <link href="~/css/style.css" rel="stylesheet">
+    <link href="~/css/feedback.css" rel="stylesheet"/>
     <style>
         .login-popup {
             position: fixed;
@@ -186,7 +187,7 @@
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <div class="h-100 d-inline-flex align-items-center py-2 me-4">
-                                    Chào @await Component.InvokeAsync("UserFullName")
+                                    @await Component.InvokeAsync("UserFullName")
                                 </div>
                                 <div class="h-100 d-inline-flex align-items-center py-2">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Đăng xuất</a>
@@ -235,7 +236,7 @@
                             {
                                 if (User.Identity.IsAuthenticated)
                                 {
-                                    <a asp-action="Booking" asp-controller="booking" class="nav-item nav-link">Lịch sử</a>
+                                    <a asp-action="History" asp-controller="booking" class="nav-item nav-link">Lịch sử</a>
                                 }
                                 <a asp-action="Booking" asp-controller="booking" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">ĐẶT PHÒNG<i class="fa fa-arrow-right ms-3"></i></a>
                             }

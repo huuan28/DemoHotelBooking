@@ -10,14 +10,44 @@ namespace DemoHotelBooking.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly AppDbContext _context;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(AppDbContext context,UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _context = context;
         }
 
+        public async Task<IActionResult> CustomerList()
+        {
+            //var users = _context.Users.ToList();
+            var users = _userManager.Users.ToList();
+            var cus = new List<AppUser>();
+            foreach(var u in users)
+            {
+                if (await _userManager.IsInRoleAsync(u, "Customer"))
+                {
+                    cus.Add(u);
+                }
+            }
+            return View(cus);
+        }
+        public async Task<IActionResult> StaffList()
+        {
+            //var users = _context.Users.ToList();
+            var users = _userManager.Users.ToList();
+            var cus = new List<AppUser>();
+            foreach (var u in users)
+            {
+                if (await _userManager.IsInRoleAsync(u, "Customer"))
+                {
+                    cus.Add(u);
+                }
+            }
+            return View(cus);
+        }
 
         public IActionResult Register()
         {

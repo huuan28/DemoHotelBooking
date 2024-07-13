@@ -1,0 +1,51 @@
+﻿@model IEnumerable<DemoHotelBooking.ViewModels.BookingView>
+
+@{
+    ViewData["Title"] = "History";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Lịch sử đặt phòng</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Ngày đặt
+            </th>
+            <th>
+                Ngày nhận phòng
+            </th>
+            <th>
+                Ngày trả phòng
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Booking.CreateDate)
+                </td>
+               
+                <td>
+                    @Html.DisplayFor(modelItem => item.Booking.CheckinDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Booking.CheckoutDate)
+                </td>
+                <td class="@item.StatusColor">
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <a asp-action="BookingDetails" asp-route-id="@item.Booking.Id">Xem chi tiết</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

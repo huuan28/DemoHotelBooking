@@ -3,7 +3,9 @@ using DemoHotelBooking.Services;
 using DemoHotelBooking.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 
 namespace DemoHotelBooking.Controllers
@@ -34,7 +36,7 @@ namespace DemoHotelBooking.Controllers
             var bookingJson = HttpContext.Session.GetString("CurrentBooking");
             if (string.IsNullOrEmpty(bookingJson))
             {
-                return new BookingViewModel { CheckinDate=DateTime.Now};
+                return new BookingViewModel { CheckinDate = DateTime.Now };
             }
             return JsonConvert.DeserializeObject<BookingViewModel>(bookingJson);
         }
@@ -102,7 +104,7 @@ namespace DemoHotelBooking.Controllers
                     ViewData["bookingRooms"] = currentBooking.SelectedRooms;
                     return View(model);
                 }
-                if (model.CheckinDate >= model.CheckoutDate||model.CheckoutDate.Day-model.CheckinDate.Day<1)
+                if (model.CheckinDate >= model.CheckoutDate || model.CheckoutDate.Day - model.CheckinDate.Day < 1)
                 {
                     ViewBag.Error = "Cần đặt ít nhất 1 ngày!!!";
                     ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
@@ -125,7 +127,7 @@ namespace DemoHotelBooking.Controllers
                     FullName = model.Name,
                     BookingId = new Random().Next(1, 1000)
                 };
-                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel,"a"));
+                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel, "a"));
             }
             ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
             ViewData["bookingRooms"] = currentBooking.SelectedRooms;
@@ -275,6 +277,43 @@ namespace DemoHotelBooking.Controllers
         public IActionResult PaymentFail()
         {
             return View();
+        }
+
+        public async Task<IActionResult> History()
+        {
+            var cus = await GetCurrentUserAsync();
+            var bks = _context.Bookings.Where(i => i.CusID == cus.Id).Include(i => i.Customer).ToList();
+            var models = new List<BookingView>();
+            foreach (var i in bks)
+            {
+                models.Add(new BookingView
+                {
+                    Booking = i
+                });
+            }
+            return View(models);
+        }
+        public IActionResult BookingDetails(int id)
+        {
+            var bkdt = _context.Bookings.Find(id);
+            var dt = _context.BookingDetails.Where(i => i.BookingId == id).Include(i => i.Room).ToList();
+            var model = new BookingView
+            {
+                Booking = bkdt,
+                Rooms = dt
+            };
+            return View(model);
+        }
+        public async Task<IActionResult> CancelBooking(int id)
+        {
+            var cus = await GetCurrentUserAsync();
+            if (cus == null) return NotFound();
+            var bk = _context.Bookings.Find(id);
+            if (bk == null) return NotFound();
+            bk.Status =3;
+            _context.Bookings.Update(bk);
+            _context.SaveChanges();
+            return RedirectToAction("BookingDetails",new {id=id});
         }
     }
 }

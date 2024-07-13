@@ -1,0 +1,85 @@
+﻿@model DemoHotelBooking.ViewModels.BookingView
+
+@{
+    ViewData["Title"] = "BookingDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Chi tiết đặt phòng</h1>
+<div>
+    @if (Model.Booking.Status < 3)
+    {
+        <a onclick="return confirm('Xác nhận hủy?');" class="btn btn-danger" asp-action="CancelBooking" asp-controller="Booking" asp-route-id="@Model.Booking.Id">Hủy</a>
+        
+    }
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Mã đặt phòng
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Booking.Id)
+        </dd>
+        <dt class="col-sm-2">
+            Ngày đặt
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Booking.CreateDate)
+        </dd>
+        <dt class="col-sm-2">
+            Ngày nhận phòng
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Booking.CheckinDate)
+        </dd>
+        <dt class="col-sm-2">
+            Ngày trả phòng
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Booking.CheckoutDate)
+        </dd>
+        <dt class="col-sm-2">
+            Hình thức đặt cọc
+        </dt>
+        <dd class="col-sm-10">
+           VnPay
+        </dd>
+        <dt class="col-sm-2">
+            Tiền đặt cọc
+        </dt>
+        <dd class="col-sm-10">
+            @string.Format("{0:#,0} VNĐ",Model.Booking.Deposit)
+        </dd>
+        <dt class="col-sm-2">
+            Trạng thái đơn
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            Tên phòng
+        </th>
+        <th>
+            Loại phòng
+        </th>
+        <th>
+            Giá
+        </th>
+    </tr>
+    @foreach (var i in Model.Rooms)
+    {
+        <tr>
+            <td>@i.Room.Name</td>
+            <td>@i.Room.Type</td>
+            <td>@string.Format("{0:#,0} VNĐ", i.Price)</td>
+        </tr>
+    }
+</table>
+<div>
+    <a class="text-warning" asp-action="Index">Quay lại</a>
+</div>

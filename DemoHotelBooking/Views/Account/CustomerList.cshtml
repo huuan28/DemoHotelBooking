@@ -1,0 +1,81 @@
+﻿@model IEnumerable<DemoHotelBooking.Models.AppUser>
+@{
+    ViewData["Title"] = "UserList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Tên đăng nhập
+            </th>
+            <th>
+                Số điện thoại
+            </th>
+            <th>
+                Họ và tên
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Giới tính
+            </th>
+            <th>
+                Ngày sinh
+            </th>
+            <th>
+                Địa chỉ
+            </th>
+            <th>
+                Đã đăng ký?
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                    @if (item.Gender == null)
+                    {
+                        @: Khác
+                    }
+                    else
+                    {
+                        @: item.Gender
+                    }
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DoB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsRegisted)
+            </td>
+            <td>
+                <a class="text-warning" asp-action="Edit" asp-route-id="@item.Id">Khóa</a> |
+                <a class="text-danger" asp-action="Delete" asp-route-id="@item.Id">Xóa</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

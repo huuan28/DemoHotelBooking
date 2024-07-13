@@ -3,9 +3,8 @@
     ViewData["Title"] = "AllRoomList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-<h1>AllRoomList</h1>
-<a class ="navbar-brand" asp-area="Admin" asp-controller="RoomManager" asp-action="Create">Create New</a>
+<h1>Danh sách phòng</h1>
+<a class="btn btn-warning" asp-area="Admin" asp-controller="RoomManager" asp-action="Create">Thêm phòng</a>
 <table class="table">
     <thead>
         <tr>
@@ -66,9 +65,7 @@
                     @Html.DisplayFor(modelItem => item.MAP)
                 </td>
                 <td>
-                    <a class="btn btn-primary" asp-area="Admin" asp-controller="RoomManager" asp-action="Update" asp-route-id="@item.Id">Edit</a> |
-                    <a class="btn btn-success" asp-area="Admin" asp-controller="RoomManager" asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a class="btn btn-danger" asp-area="Admin" asp-controller="RoomManager" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <a class="text-warning" asp-area="Admin" asp-controller="RoomManager" asp-action="Details" asp-route-id="@item.Id">Details</a>
                 </td>
             </tr>
         }

@@ -44,10 +44,10 @@ namespace DemoHotelBooking.ViewModels
             {
                 switch (Status)
                 {
-                    case "Đã đặt": return "#FCE300";
-                    case "Bảo trì": return "707577";
-                    case "Đang thuê": return "DD3736";
-                    default: return "#00A3FC";
+                    case "Đã đặt": return "bg-warning";
+                    case "Bảo trì": return "bg-light";
+                    case "Đang thuê": return "bg-danger";
+                    default: return "bg-success";
                 }
             }
         }
