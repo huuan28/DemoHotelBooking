@@ -1,6 +1,10 @@
 ﻿@model DemoHotelBooking.ViewModels.LoginViewModel
-
+@{
+    string returnUrl = ViewData["ReturnUrl"] as string;
+}
 <form asp-action="Login" asp-controller="Account" method="post" id="loginForm">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" name="returnUrl" value="@returnUrl" />
     <div class="form-group">
         <label asp-for="UserName"></label>
         <input asp-for="UserName" class="form-control" />

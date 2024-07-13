@@ -34,6 +34,8 @@ namespace DemoHotelBooking.Models
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(admin, "Admin");
+                    await userManager.AddToRoleAsync(admin, "Receptionist");
+                    await userManager.AddToRoleAsync(admin, "Accountant");
                 }
             }
 

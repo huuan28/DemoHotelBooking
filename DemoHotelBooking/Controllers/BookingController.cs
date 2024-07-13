@@ -95,7 +95,7 @@ namespace DemoHotelBooking.Controllers
                     ViewData["bookingRooms"] = currentBooking.SelectedRooms;
                     return View(model);
                 }
-                if (model.CheckinDate < DateTime.Now || model.CheckoutDate < DateTime.Now)
+                if (model.CheckinDate < DateTime.Now)
                 {
                     ViewBag.Error = "Không thể nhận/trả phòng ở thời điểm này!!!";
                     ViewData["availbleRooms"] = currentBooking.AvailbleRooms;

@@ -1,0 +1,93 @@
+﻿@using DemoHotelBooking.ViewModels
+@model IEnumerable<DemoHotelBooking.Models.ReportRevenue>
+
+@{
+    ViewData["Title"] = "ReportList";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var statistic = ViewData["Statistic"] as Statistic;
+}
+@* <div class="report-container">
+    <div class="loader-overlay">
+        <div class="lds-facebook">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div> *@
+
+<h1>Danh sách báo cáo doanh thu</h1>
+
+<p>
+    <a onclick="return confirm('Xác nhận');" class="btn btn-warning" asp-action="Create">Tạo báo cáo mới</a>
+</p>
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Tháng
+            </th>
+            <th>
+                Ngày báo cáo
+            </th>
+            <th>
+                Doanh thu
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date.Month)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @string.Format("{0:#,0} VNĐ", item.Total)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Chi tiết</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    @Html.Partial("_Statistic", statistic)
+</div>
+@* </div> *@
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var loaderOverlay = document.querySelector(".loader-overlay");
+
+        function showLoading() {
+            loaderOverlay.style.display = "flex";
+        }
+
+        function hideLoading() {
+            loaderOverlay.style.display = "none";
+        }
+
+        // Show loading spinner on form submission
+        var forms = document.querySelectorAll("form");
+        forms.forEach(function (form) {
+            form.addEventListener("submit", function () {
+                showLoading();
+            });
+        });
+
+        // Show loading spinner on AJAX start and hide on AJAX complete
+        $(document).ajaxStart(function () {
+            showLoading();
+        }).ajaxStop(function () {
+            hideLoading();
+        });
+
+        // Optional: Hide loading spinner after a fixed time (e.g., for debugging)
+        setTimeout(hideLoading, 2000);
+    });
+</script>

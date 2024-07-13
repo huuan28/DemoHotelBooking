@@ -31,7 +31,7 @@
     <hr />
     @if (Model.Invoice.Status == 1)
     {
-        <a class="btn btn-danger" asp-action="Checkout" asp-route-id="@Model.Invoice.Id">Trả phòng</a>
+        <a onclick="return confirm('Xác nhận');" class="btn btn-danger" asp-action="Checkout" asp-route-id="@Model.Invoice.Id">Trả phòng</a>
     }
     <hr/>
     <a class="btn btn-success" asp-action="Print" asp-route-id="@Model.Invoice.Id" target="_blank">In phiếu</a>
@@ -54,13 +54,6 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Invoice.Booking.Id)
         </dd>
-        <dt class="col-sm-2">
-            Ngày tạo
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Invoice.CreateDate)
-        </dd>
-
         <dt class="col-sm-2">
             Tiền đặt cọc
         </dt>
@@ -93,6 +86,12 @@
         </dt>
         <dd class="col-sm-10">
             @Model.Status
+        </dd>
+        <dt class="col-sm-2">
+            Ngày nhận phòng
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Invoice.CreateDate)
         </dd>
         @if (Model.Invoice.Status == 3)
         {
@@ -165,7 +164,7 @@
             <option value="0">Tiền mặt</option>
             <option value="1">Thanh toán VnPay</option>
         </select>
-        <input class="btn btn-primary" type="submit" value="Xác nhận" />
+        <input  class="btn btn-primary" type="submit" value="Xác nhận" />
     </form>
 }
 <div>

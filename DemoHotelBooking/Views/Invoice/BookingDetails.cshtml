@@ -9,7 +9,7 @@
 <div>
     @if (Model.Booking.Status < 3)
     {
-        <a class="btn btn-primary" asp-action="checkin" asp-controller="invoice" asp-route-id="@Model.Booking.Id">Checkin</a>
+        <a onclick="return confirm('Xác nhận lập phiếu nhận phòng?');" class="btn btn-primary" asp-action="checkin" asp-controller="invoice" asp-route-id="@Model.Booking.Id">Checkin</a>
     }
     <hr />
     <dl class="row">

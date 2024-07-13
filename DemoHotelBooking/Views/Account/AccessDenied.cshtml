@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "InvoiceDetail";
+    Layout = "~/Views/Shared/_Empty.cshtml";
+}
+<div style="text-align:center">
+    <h1>
+        Không có quyền truy cập
+    </h1>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <a class="btn btn-danger" asp-action="Login">Đăng nhập</a>
+    }
+</div>

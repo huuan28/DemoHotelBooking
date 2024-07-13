@@ -14,12 +14,14 @@ namespace DemoHotelBooking.Areas.Admin.Controllers
         {
             _context = context;
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View(new RoomViewModel());
         }
         [HttpPost]
-        public async Task<IActionResult> Create(RoomViewModel model)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Create(RoomViewModel model, IFormFile image)
         {
             if (ModelState.IsValid)
             {
@@ -48,6 +50,7 @@ namespace DemoHotelBooking.Areas.Admin.Controllers
             var list = _context.Rooms.ToList();
             return View(list);
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Update(int Id)
         {
             var room = _context.Rooms.FirstOrDefault(r => r.Id == Id);
@@ -56,6 +59,7 @@ namespace DemoHotelBooking.Areas.Admin.Controllers
             return View(room);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(RoomViewModel model)
         {
             if (ModelState.IsValid)
@@ -79,6 +83,7 @@ namespace DemoHotelBooking.Areas.Admin.Controllers
             ViewBag.Error = "Thông tin không hợp lệ";
             return View(model);
         }
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var room = _context.Rooms.FirstOrDefault(i => i.Id == id);
@@ -149,6 +154,11 @@ namespace DemoHotelBooking.Areas.Admin.Controllers
                 default: begin = DateTime.Now; end = DateTime.Now; break;
             }
             return RedirectToAction ("RoomStatus", new {begin = begin, end = end});
+        }
+        public IActionResult RoomDetail(int id)
+        {
+            var model = _context.Rooms.Find(id);
+            return View(model);
         }
     }
 }

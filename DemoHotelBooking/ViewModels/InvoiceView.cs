@@ -23,7 +23,7 @@ namespace DemoHotelBooking.ViewModels
         {
             get
             {
-                if (Invoice.Status == 0) return "Tiền mặt";
+                if (Invoice.PayMethod == 0) return "Tiền mặt";
                 else return "VnPay";
             }
         }

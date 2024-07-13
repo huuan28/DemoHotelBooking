@@ -20,6 +20,11 @@ namespace DemoHotelBooking
             });
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
             var connectionString = builder.Configuration.GetConnectionString("SQLServerIdentityConnection") ?? throw new InvalidOperationException("Connection string 'SQLServerIdentityConnection' not found.");
             builder.Services.AddDbContext<AppDbContext>(options =>

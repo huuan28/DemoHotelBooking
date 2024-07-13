@@ -1,0 +1,62 @@
+﻿@model DemoHotelBooking.ViewModels.ReportView
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Báo cáo doanh thu tháng @Model.ReportRevenue.Date.Month</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Doanh thu tháng
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.ReportRevenue.Date.Month
+        </dd>
+        <dt class = "col-sm-2">
+            Tổng doanh thu
+        </dt>
+        <dd class = "col-sm-10">
+            @string.Format("{0:#,0} VNĐ",Model.ReportRevenue.Total)
+        </dd>
+        <dt class = "col-sm-2">
+            Người báo cáo
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ReportRevenue.Accountant.FullName)
+        </dd>
+    </dl>
+</div>
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                Tên phòng
+            </th>
+            <th>
+                Loại phòng
+            </th>
+            <th>
+                Doanh thu
+            </th>
+            <th>
+                Tỷ lệ %
+            </th>
+        </tr>
+        @foreach (var i in Model.ReportDetails)
+        {
+            <tr>
+                <td>@i.ReportDetail.Room.Name</td>
+                <td>@i.ReportDetail.Room.Type</td>
+                <td>@string.Format("{0:#,0} VNĐ", i.ReportDetail.RoomRevuenue)</td>
+                <td>@i.Percent %</td>
+            </tr>
+        }
+    </table>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

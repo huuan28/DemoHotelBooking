@@ -200,7 +200,7 @@
                                 <div class="h-100 d-inline-flex align-items-center py-2">
                                     @* <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Đăng nhập</a> *@
                                     <a class="login-btn">Đăng nhập</a>
-                                </div>          
+                                </div>
                             }
                         </div>
                     </div>
@@ -218,16 +218,27 @@
                                 <a asp-action="rooms" asp-controller="room" class="nav-item nav-link">Phòng</a>
                                 <a href="#" class="nav-item nav-link">Dịch vụ</a>
                                 @* <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
-                                    <div class="dropdown-menu rounded-0 m-0">
-                                        <a href="booking.html" class="dropdown-item">Booking</a>
-                                        <a href="team.html" class="dropdown-item">Our Team</a>
-                                        <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                    </div>
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Pages</a>
+                                <div class="dropdown-menu rounded-0 m-0">
+                                <a href="booking.html" class="dropdown-item">Booking</a>
+                                <a href="team.html" class="dropdown-item">Our Team</a>
+                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                                </div>
                                 </div> *@
                                 <a href="#" class="nav-item nav-link">Liên hệ</a>
                             </div>
-                            <a asp-action="Booking" asp-controller="booking" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">ĐẶT PHÒNG<i class="fa fa-arrow-right ms-3"></i></a>
+                            @if (User.IsInRole("Receptionist") || User.IsInRole("Admin")||User.IsInRole("Accountant"))
+                            {
+                                <a asp-action="roomstatus" asp-controller="Roommanager" asp-area="admin" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">Quản lý<i class="fa fa-arrow-right ms-3"></i></a>
+                            }
+                            else
+                            {
+                                if (User.Identity.IsAuthenticated)
+                                {
+                                    <a asp-action="Booking" asp-controller="booking" class="nav-item nav-link">Lịch sử</a>
+                                }
+                                <a asp-action="Booking" asp-controller="booking" class="btn btn-primary rounded-0 py-4 px-md-5 d-none d-lg-block">ĐẶT PHÒNG<i class="fa fa-arrow-right ms-3"></i></a>
+                            }
                         </div>
                     </nav>
                 </div>

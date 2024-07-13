@@ -1,15 +1,15 @@
 ﻿using DemoHotelBooking.Models;
 using DemoHotelBooking.Services;
 using DemoHotelBooking.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NuGet.Protocol;
 
 namespace DemoHotelBooking.Controllers
 {
+    [Authorize(Roles = "Receptionist")]
     public class InvoiceController : Controller
     {
         private readonly AppDbContext _context;
@@ -108,8 +108,7 @@ namespace DemoHotelBooking.Controllers
                 i.Room = _context.Rooms.Find(i.RoomId);
                 model.Rooms.Add(i.Room);
             }
-            ViewBag.Message = "Lập phiếu thành công";
-            return RedirectToAction("InvoiceDetail", new { id = inv.Id });
+            return RedirectToAction("InvoiceDetail", new { id = inv.Id, message = "Lập phiếu thành công" });
         }
         [HttpPost]
         public IActionResult UpdateSubFee(int ivid, int rid, int subfee)
@@ -124,6 +123,8 @@ namespace DemoHotelBooking.Controllers
                 return RedirectToAction("InvoiceDetail", new { id = ivid });
             return NotFound();
         }
+        //////////////////////////////////////////
+        //////////////////////////////////////////
         public IActionResult InvoiceDetail(int id, string? message)
         {
             var inv = _context.Invoices.Find(id);
@@ -155,6 +156,8 @@ namespace DemoHotelBooking.Controllers
                 ViewBag.Message = message;
             return View(ivv);
         }
+        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////
         public IActionResult Checkout(int id)
         {
             var iv = _context.Invoices.Find(id);
@@ -162,7 +165,7 @@ namespace DemoHotelBooking.Controllers
             iv.Status = 2;
             _context.Invoices.Update(iv);
             _context.SaveChanges();
-            return RedirectToAction("invoicedetail", new { id = id });
+            return RedirectToAction("invoicedetail", new { id = id, message="Trả phòng thành công" });
         }
         [HttpPost]
         public IActionResult Checkout(int id, int paymethod)
@@ -171,7 +174,7 @@ namespace DemoHotelBooking.Controllers
             if (iv == null) return NotFound();
             if (paymethod == 0)
             {
-                iv.PayMethod = paymethod;
+                iv.PayMethod = 0;
                 iv.Status = 3;
                 iv.PaymentDate = DateTime.Now;
                 _context.Invoices.Update(iv);
@@ -323,6 +326,29 @@ namespace DemoHotelBooking.Controllers
             };
             viewModel.Final = viewModel.Invoice.Amount - viewModel.Invoice.Booking.Deposit + invoiceDetails.Sum(d => d.Price* d.SubFee/100);
             return View("Print", viewModel);
+        }
+
+        public IActionResult InvoiceList(int? type)
+        {
+            int status = type ?? 0;
+            var list = _context.Invoices
+                .Include(i=>i.Booking)
+                .ThenInclude(x=>x.Customer)
+                .ToList();
+            if (status != 0)
+            {
+                list = list.Where(i=>i.Status == status).ToList();
+            }
+            var models = new List<InvoiceView>();
+            foreach (var item in list)
+            {
+                models.Add(
+                    new InvoiceView
+                    {
+                        Invoice = item,
+                    });
+            }
+            return View(models);
         }
     }
 }
