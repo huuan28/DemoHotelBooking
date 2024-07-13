@@ -4,20 +4,34 @@
     ViewData["Title"] = "RoomStatus";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+<style>
+    .item-container {
+        position: relative;
+    }
 
-<h1>Tinh trạng phòng</h1>
-<div class="container">
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-4 col-md-3 col-lg-2" style="background:@item.StatusColor;margin:5px;">
-                @Html.DisplayFor(modelItem => item.Name)
-                <br />
-                @Html.DisplayFor(modelItem => item.Status)
-            </div>
-        }
-    </div>
-</div>
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .box {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+    }
+    .img{
+        width: 100%;
+        height: auto;
+    }
+    .my-div{
+        color: #ffff
+    }
+</style>
+<h1 class="text-center">Tình trạng phòng</h1>
 <form asp-action="RoomStatus" asp-controller="RoomManager" asp-area="Admin">
     <select name="date">
         <option value="1">
@@ -33,5 +47,24 @@
             18:00 - 24:00
         </option>
     </select>
-    <input type="submit"/>
+    <input class="btn btn-waring" type="submit" />
 </form>
+<div class="container ">
+    <div class="row">      
+        @foreach (var item in Model)
+        {
+            <div class="col-4 col-md-3 col-lg-3 item-container" style="padding: 20px">
+                <div class="image-container">
+                    <img src="~/img/carousel-1.jpg" class="img" />
+                    <div class="box" style="background:@item.StatusColor;margin:5px;">
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </div>
+                    <div class="text-center my-div" style="background:#080808">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

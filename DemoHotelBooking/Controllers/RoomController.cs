@@ -1,19 +1,24 @@
 ﻿using DemoHotelBooking.Models;
+using DemoHotelBooking.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DemoHotelBooking.Controllers
 {
     public class RoomController : Controller
     {
         public readonly AppDbContext _context;
-        public RoomController(AppDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+        public RoomController(AppDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager=userManager;
         }
 
         public IActionResult Index()
         {
-            var list = _context.Rooms.ToList();
+            var list = _context.Feedbacks.Include(a=>a.User).ToList();
             return View(list);
         }
         public IActionResult Rooms(string? s)
@@ -51,6 +56,26 @@ namespace DemoHotelBooking.Controllers
             if (room == null)
                 return NotFound();
             return View(room);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Create(int stars, string comment)
+        {
+            if (ModelState.IsValid)
+            {
+                var customer = await _userManager.GetUserAsync(HttpContext.User);
+                var feedbacks = new Feedback
+                {
+                    Stars = stars,
+                    Comment = comment,
+                    CusId = customer.Id,
+                    CreateDate = DateTime.Now,
+                    Status = true
+                };
+                _context.Feedbacks.Add(feedbacks);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return View();
         }
 
     }

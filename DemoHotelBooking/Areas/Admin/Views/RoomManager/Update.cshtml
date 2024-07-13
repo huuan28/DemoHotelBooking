@@ -9,58 +9,60 @@
 
 <h4>Room</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Update">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Type" class="control-label"></label>
-                <input asp-for="Type" class="form-control" />
-                <span asp-validation-for="Type" class="text-danger"></span>
+<div class="container">
+    <form asp-action="Update">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="row">
+            <div class="col-md-4 col-lg-6" style="padding: 10px">
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="Type" class="control-label"></label>
+                    <input asp-for="Type" class="form-control" />
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="FloorNumber" class="control-label"></label>
+                    <input asp-for="FloorNumber" class="form-control" />
+                    <span asp-validation-for="FloorNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="DAP" class="control-label"></label>
+                    <input asp-for="DAP" class="form-control" />
+                    <span asp-validation-for="DAP" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="MAP" class="control-label"></label>
+                    <input asp-for="MAP" class="form-control" />
+                    <span asp-validation-for="MAP" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="col-md-4 col-lg-6" style="padding: 10px">
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="Introduce" class="control-label"></label>
+                    <textarea asp-for="Introduce" class="form-control" rows="7"></textarea>
+                    <span asp-validation-for="Introduce" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="padding: 10px">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="7"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="FloorNumber" class="control-label"></label>
-                <input asp-for="FloorNumber" class="form-control" />
-                <span asp-validation-for="FloorNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Introduce" class="control-label"></label>
-                <input asp-for="Introduce" class="form-control" />
-                <span asp-validation-for="Introduce" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="DAP" class="control-label"></label>
-                <input asp-for="DAP" class="form-control" />
-                <span asp-validation-for="DAP" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MAP" class="control-label"></label>
-                <input asp-for="MAP" class="form-control" />
-                <span asp-validation-for="MAP" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>    
+        <div class="form-group text-end" style="padding: 10px">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
 
 <div>

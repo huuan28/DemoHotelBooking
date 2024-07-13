@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DemoHotelBooking.Models.Room>
+﻿@using DemoHotelBooking.ViewModels
+@model IEnumerable<DemoHotelBooking.Models.Room>
 
 @{
     ViewData["Title"] = "Rooms";
@@ -18,7 +19,9 @@
             <h6 class="section-title text-center text-primary text-uppercase">Our Rooms</h6>
             <h1 class="mb-5">Explore Our <span class="text-primary text-uppercase">Rooms</span></h1>
         </div>
+        
         @Html.Partial("RoomList", Model)
+        
     </div>
 </div>
 @section Scripts {
