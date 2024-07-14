@@ -5,8 +5,100 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<style>
+    .body {
+        display: flex;
+        align-items: center;
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
 
+    .image-wrapper {
+        flex: 1;
+    }
+
+        .image-wrapper img {
+            width: 100%;
+            height: auto;
+        }
+
+        .image-wrapper2 img {
+            width: 100%;
+            height: 500px;
+        }
+
+    .content {
+        flex: 1;
+        padding: 40px;
+    }
+
+        .content h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .content p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+    .contact-info h3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 12px;
+    }
+
+    .contact-info p {
+        font-size: 14px;
+        line-height: 1.4;
+        margin-bottom: 8px;
+    }
+</style>
+
+
+
+<div class="content">
+    <h1>@Html.DisplayFor(model => model.Name)</h1>
+    <h5>@Html.DisplayNameFor(model => model.Type):  @Html.DisplayFor(model => model.Type)</h5>
+    <div class="container" style="padding-block-end: 20px">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="col">
+                    <div class="image-wrapper2">
+                        <img src="~/img/room-3.jpg" alt="Summer Credit Package">
+                    </div>
+                    <div class="d-flex mb-3" style="padding-top: 50px">
+                        <small class="border-end me-3 pe-3"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="border-end me-3 pe-3"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                        <small><i class="fa fa-wifi text-primary me-2"></i>Wifi</small>
+                    </div>
+                    <h5>Giá: @string.Format("{0:#,0}đ", @Model.Price)</h5>
+                </div>
+
+            </div>
+            <div class="col-lg-4">
+                <div class="col">
+                    <div class="image-wrapper">
+                        <img src="~/img/room-1.jpg" alt="Summer Credit Package">
+                    </div>
+                    <div class="image-wrapper" style="padding-top: 18px">
+                        <img src="~/img/room-2.jpg" alt="Summer Credit Package">
+                    </div>
+                </div>
+            </div>
+            <h5>Giới Thiệu</h5>
+            <p>Phòng khách sạn của chúng tôi là sự kết hợp hoàn hảo giữa tiện nghi hiện đại và sự sang trọng. Mỗi phòng đều được trang bị đầy đủ các tiện ích như TV màn hình phẳng, điều hòa không khí, Wi-Fi miễn phí và minibar. Nội thất được thiết kế tinh tế, mang đến cảm giác ấm cúng và thoải mái cho du khách. Vị trí khách sạn thuận tiện, gần các điểm tham quan nổi tiếng và nhà hàng địa phương. Đội ngũ nhân viên chuyên nghiệp và thân thiện luôn sẵn sàng phục vụ, đảm bảo mang đến cho quý khách trải nghiệm nghỉ dưỡng tuyệt vời.</p>
+
+        </div>
+    </div>
+</div>
+@*
 <div>
     <h4>Room</h4>
     <hr />
@@ -15,53 +107,53 @@
             @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+            
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Type)
+            
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Type)
+            
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.FloorNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FloorNumber)
+            
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Introduce)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Introduce)
+            
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+           
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DAP)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DAP)
+           
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.MAP)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MAP)
+            
         </dd>
     </dl>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
