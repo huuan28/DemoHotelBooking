@@ -1,4 +1,5 @@
 ﻿using DemoHotelBooking.Models;
+using DemoHotelBooking.Models.Order;
 using DemoHotelBooking.Services;
 using DemoHotelBooking.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -17,16 +18,18 @@ namespace DemoHotelBooking.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly AppDbContext _context;
         private readonly IVnPayService _vnPayService;
+        private readonly IMomoService _momoService;
 
         private BookingViewModel currentBooking;
         private AppUser currentUser;
-        public BookingController(AppDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IVnPayService service)
+        public BookingController(IMomoService momoService, AppDbContext context, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<IdentityRole> roleManager, IVnPayService service)
         {
             _vnPayService = service;
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _momoService = momoService;
         }
         private Task<AppUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
@@ -75,7 +78,7 @@ namespace DemoHotelBooking.Controllers
             if (ModelState.IsValid)
             {
                 TimeSpan stayDuration = model.CheckoutDate - model.CheckinDate;
-                int numberOfDays = stayDuration.Days;
+                int numberOfDays = stayDuration.Days < 1 ? 1 : stayDuration.Days;
                 var user = _context.Users.FirstOrDefault(i => i.PhoneNumber == model.Phone);
                 //Kiểm tra đã đăng ký chưa
                 if (user == null)
@@ -119,15 +122,26 @@ namespace DemoHotelBooking.Controllers
                 currentBooking.Amount = currentBooking.SelectedRooms.Sum(i => i.Price) * numberOfDays;
                 currentBooking.Customer = user;
                 SaveBookingToSession(currentBooking);
-                var vnPayModel = new VnPaymentRequestModel()
+                //var vnPayModel = new VnPaymentRequestModel()
+                //{
+                //    Amount = (double)currentBooking.Deposit,
+                //    CreateDate = DateTime.Now,
+                //    Description = $"{model.Phone}-{model.Name}",
+                //    FullName = model.Name,
+                //    BookingId = new Random().Next(1, 1000)
+                //};
+                //var url = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel, "a");
+                //return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel, "a"));
+                var order = new OrderInfoModel
                 {
+                    FullName = user.FullName,
                     Amount = (double)currentBooking.Deposit,
-                    CreateDate = DateTime.Now,
-                    Description = $"{model.Phone}-{model.Name}",
-                    FullName = model.Name,
-                    BookingId = new Random().Next(1, 1000)
+                    OrderId = new Random().Next(1, 1000).ToString(),
+                    OrderInfo = $"{model.Phone}-{model.Name}",
                 };
-                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel, "a"));
+                var response = await _momoService.CreatePaymentAsync(order, "booking");
+                var url = response.PayUrl;
+                return Redirect(url);
             }
             ViewData["availbleRooms"] = currentBooking.AvailbleRooms;
             ViewData["bookingRooms"] = currentBooking.SelectedRooms;
@@ -228,8 +242,9 @@ namespace DemoHotelBooking.Controllers
         public async Task<IActionResult> PaymentCallBack()
         {
             // Lấy thông tin từ query string của VnPay để xác thực và cập nhật trạng thái đơn hàng
-            var response = _vnPayService.PaymentExecute(Request.Query);
-            if (response == null || response.VnPayResponseCode != "00")
+            //var response = _vnPayService.PaymentExecute(Request.Query);
+            var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
+            if (response == null)
             {
                 //thanh toán thất bại
                 return RedirectToAction("PaymentFail");
@@ -310,10 +325,10 @@ namespace DemoHotelBooking.Controllers
             if (cus == null) return NotFound();
             var bk = _context.Bookings.Find(id);
             if (bk == null) return NotFound();
-            bk.Status =3;
+            bk.Status = 3;
             _context.Bookings.Update(bk);
             _context.SaveChanges();
-            return RedirectToAction("BookingDetails",new {id=id});
+            return RedirectToAction("BookingDetails", new { id = id });
         }
     }
 }

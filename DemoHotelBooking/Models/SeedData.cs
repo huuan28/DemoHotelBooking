@@ -43,9 +43,9 @@ namespace DemoHotelBooking.Models
             var customers = new List<AppUser>
             {
                  new AppUser { UserName = "an",FullName = "An", Email = "customer1@example.com", PhoneNumber="0933912012" },
-                 new AppUser { UserName = "hao",FullName = "Hào", Email = "customer2@example.com" },
-                 new AppUser { UserName = "manh",FullName = "Mạnh", Email = "customer3@example.com" },
-                 new AppUser { UserName = "tuan",FullName = "Tuấn", Email = "customer5@example.com" },
+                 new AppUser { UserName = "hao",FullName = "Hào", Email = "customer2@example.com",PhoneNumber="0271444444" },
+                 new AppUser { UserName = "manh",FullName = "Mạnh", Email = "customer3@example.com",PhoneNumber="0369872113" },
+                 new AppUser { UserName = "tuan",FullName = "Tuấn", Email = "customer5@example.com",PhoneNumber="0909090909" },
              };
             if (userManager.Users.All(u => u.UserName != "letan"))
             {

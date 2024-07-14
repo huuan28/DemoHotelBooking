@@ -1,4 +1,5 @@
 ﻿using DemoHotelBooking.Models;
+using DemoHotelBooking.Models.Order;
 using DemoHotelBooking.Services;
 using DemoHotelBooking.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -15,18 +16,20 @@ namespace DemoHotelBooking.Controllers
         private readonly AppDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly IVnPayService _vnPayService;
-        public InvoiceController(AppDbContext context, UserManager<AppUser> userManager, IVnPayService vnPayService)
+        private readonly IMomoService _momoService;
+        public InvoiceController(IMomoService momoService, AppDbContext context, UserManager<AppUser> userManager, IVnPayService vnPayService)
         {
             _context = context;
             _userManager = userManager;
             _vnPayService = vnPayService;
+            _momoService = momoService;
         }
         //ds datphong
         public IActionResult BookingList()
         {
             //var list = _context.Bookings.ToList();
             var list = _context.Bookings
-                .Include(i=>i.Customer)
+                .Include(i => i.Customer)
                 .ToList();
             var models = new List<BookingView>();
             foreach (var i in list)
@@ -60,8 +63,8 @@ namespace DemoHotelBooking.Controllers
             var inv = _context.Invoices.FirstOrDefault(i => i.BookingId == id);
             if (inv != null) return NotFound();
             var Receptionist = await _userManager.GetUserAsync(HttpContext.User);
-            if(Receptionist==null)
-                return RedirectToAction("Login","Account");
+            if (Receptionist == null)
+                return RedirectToAction("Login", "Account");
             var bkdt = _context.BookingDetails.Where(i => i.BookingId == id).ToList();
             TimeSpan stayDuration = bk.CheckoutDate - bk.CheckinDate;
             int numberOfDays = stayDuration.Days;
@@ -152,7 +155,7 @@ namespace DemoHotelBooking.Controllers
             ivv.Final = inv.Amount - inv.Booking.Deposit;
             _context.Invoices.Update(inv);
             _context.SaveChanges();
-            if(!string.IsNullOrEmpty(message))
+            if (!string.IsNullOrEmpty(message))
                 ViewBag.Message = message;
             return View(ivv);
         }
@@ -165,10 +168,10 @@ namespace DemoHotelBooking.Controllers
             iv.Status = 2;
             _context.Invoices.Update(iv);
             _context.SaveChanges();
-            return RedirectToAction("invoicedetail", new { id = id, message="Trả phòng thành công" });
+            return RedirectToAction("invoicedetail", new { id = id, message = "Trả phòng thành công" });
         }
         [HttpPost]
-        public IActionResult Checkout(int id, int paymethod)
+        public async Task<IActionResult> Checkout(int id, int paymethod)
         {
             var iv = _context.Invoices.Find(id);
             if (iv == null) return NotFound();
@@ -184,16 +187,25 @@ namespace DemoHotelBooking.Controllers
             string redirectUrl;
             iv.Booking = _context.Bookings.Find(iv.BookingId);
             iv.Booking.Customer = _context.Users.Find(iv.Booking.CusID);
-            var vnPayModel = new VnPaymentRequestModel()
+            //var vnPayModel = new VnPaymentRequestModel()
+            //{
+            //    Amount = Math.Round(iv.Amount - iv.Booking.Deposit, 0),
+            //    CreateDate = DateTime.Now,
+            //    Description = $"Thanh toan hoa don:{id}",
+            //    FullName = iv.Booking.Customer.FullName,
+            //    BookingId = id
+            //};
+            //redirectUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel, "");
+            //return Redirect(redirectUrl);
+            var order = new OrderInfoModel
             {
-                Amount = Math.Round(iv.Amount - iv.Booking.Deposit, 0),
-                CreateDate = DateTime.Now,
-                Description = $"Thanh toan hoa don:{id}",
                 FullName = iv.Booking.Customer.FullName,
-                BookingId = id
+                Amount = Math.Round(iv.Amount - iv.Booking.Deposit, 0),
+                OrderId = id.ToString(),
+                OrderInfo = $"Thanh toan hoa don:{id}",
             };
-            redirectUrl = _vnPayService.CreatePaymentUrl(HttpContext, vnPayModel, "");
-            return Redirect(redirectUrl);
+            var response = await _momoService.CreatePaymentAsync(order, "invoice");
+            return Redirect(response.PayUrl);
         }
         /////////Sesstion
         private async Task<InvoiceViewModel> GetInvoiceFromSession(int id)
@@ -276,15 +288,23 @@ namespace DemoHotelBooking.Controllers
         {
 
             // Lấy thông tin từ query string của VnPay để xác thực và cập nhật trạng thái đơn hàng
-            var response = _vnPayService.PaymentExecute(Request.Query);
-            int id = int.Parse(response.OrderDescription.Split(':')[1]);
-            if (response == null || response.VnPayResponseCode != "00")
+            //var response = _vnPayService.PaymentExecute(Request.Query);
+            //int id = int.Parse(response.OrderDescription.Split(':')[1]);
+            //if (response == null || response.VnPayResponseCode != "00")
+            //{
+            //    //thanh toán thất bại
+            //    //int idiv = (int)TempData["ivid"];
+            //    return RedirectToAction("invoicedetail", new { id = id, message = "Thanh toán thất bại" });
+            //}
+            var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
+            if (response == null)
             {
                 //thanh toán thất bại
-                //int idiv = (int)TempData["ivid"];
-                return RedirectToAction("invoicedetail", new { id = id, message = "Thanh toán thất bại" });
+                return RedirectToAction("PaymentFail");
             }
             //lấy thông tin đặt phòng từ viewmodel
+            string[] rs = response.OrderInfo.Split(':');
+            int id = int.Parse(rs[rs.Length-1]);
             var iv = _context.Invoices.Find(id);
             iv.Status = 3;
             iv.PaymentDate = DateTime.Now;
@@ -314,9 +334,9 @@ namespace DemoHotelBooking.Controllers
                 .ToList();
             int p = invoiceDetails.Sum(i => i.SubFee);
             double sf = 0;
-            foreach(var i in invoiceDetails)
+            foreach (var i in invoiceDetails)
             {
-                sf += i.Price * i.SubFee/100;
+                sf += i.Price * i.SubFee / 100;
             }
             var viewModel = new InvoiceView
             {
@@ -324,7 +344,7 @@ namespace DemoHotelBooking.Controllers
                 InvoiceDetail = invoiceDetails,
                 SubFee = sf
             };
-            viewModel.Final = viewModel.Invoice.Amount - viewModel.Invoice.Booking.Deposit + invoiceDetails.Sum(d => d.Price* d.SubFee/100);
+            viewModel.Final = viewModel.Invoice.Amount - viewModel.Invoice.Booking.Deposit + invoiceDetails.Sum(d => d.Price * d.SubFee / 100);
             return View("Print", viewModel);
         }
 
@@ -332,12 +352,12 @@ namespace DemoHotelBooking.Controllers
         {
             int status = type ?? 0;
             var list = _context.Invoices
-                .Include(i=>i.Booking)
-                .ThenInclude(x=>x.Customer)
+                .Include(i => i.Booking)
+                .ThenInclude(x => x.Customer)
                 .ToList();
             if (status != 0)
             {
-                list = list.Where(i=>i.Status == status).ToList();
+                list = list.Where(i => i.Status == status).ToList();
             }
             var models = new List<InvoiceView>();
             foreach (var item in list)

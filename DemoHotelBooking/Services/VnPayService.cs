@@ -16,7 +16,7 @@ namespace DemoHotelBooking.Services
             var tick = DateTime.Now.Ticks.ToString();
             var vnpay = new VnPayLibrary();
             vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
-            vnpay.AddRequestData("vnp_Command", _config["VnPay:Version"]);
+            vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
             vnpay.AddRequestData("vnp_TmnCode", _config["VnPay:TmnCode"]);
             vnpay.AddRequestData("vnp_Amount", (model.Amount * 100).ToString());
             vnpay.AddRequestData("vnp_CreateDate", model.CreateDate.ToString("yyyyMMddHHmmss"));

@@ -24,7 +24,7 @@ namespace DemoHotelBooking.ViewModels
             get
             {
                 if (Invoice.PayMethod == 0) return "Tiền mặt";
-                else return "VnPay";
+                else return "Momo";
             }
         }
         public double SubFee { get; set; }

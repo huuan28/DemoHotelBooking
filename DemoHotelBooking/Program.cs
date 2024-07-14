@@ -1,4 +1,5 @@
 ﻿using DemoHotelBooking.Models;
+using DemoHotelBooking.Models.Momo;
 using DemoHotelBooking.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace DemoHotelBooking
             });
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+            builder.Services.AddScoped<IMomoService, MomoService>();
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Account/Login";

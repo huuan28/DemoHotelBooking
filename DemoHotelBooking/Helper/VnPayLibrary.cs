@@ -66,7 +66,6 @@ namespace DemoHotelBooking.Helper
             var myChecksum = Utils.HmacSHA512(secretKey, rspRaw);
             return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
         }
-
         private string GetResponseData()
         {
             var data = new StringBuilder();
